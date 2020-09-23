@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.2/css/bootstrapValidator.min.css"/>
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <title>Document</title>
+    <style>
+        body{
+            background-color: #f8f8f8!important;
+        }
+        .form {
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            margin: -160px 0 0 -160px;
+            width: 320px;
+            /*height: 360px;*/
+            padding: 36px;
+            box-shadow: 0 0 100px rgba(0, 0, 0, .08);
+        }
+        .form .logo{
+            text-align: center;
+            height: 40px;
+            width: 200px;
+            line-height: 40px;
+            cursor: pointer;
+            margin-bottom: 14px;
+            /*padding-left: 10px;*/
+        }
+        .logo img{
+            width: 40px;
+            float: left;
+        }
+
+        .form .logo span {
+            vertical-align: text-bottom;
+            font-size: 16px;
+            text-transform: uppercase;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+<div class="form">
+    <div class="logo">
+        <img alt="logo" src="http://localhost:3000/images/favicon.ico">
+        <span>欢迎注册登录</span>
+    </div>
+    <!-- -->
+    <form class="form-horizontal" action="/login/login"  method="post" id="loginForm">
+        <div class="form-group  has-success has-feedback">
+            <!--<label for="inputName" class="control-label col-xs-3">帐号</label>-->
+            <div class="col-xs-12">
+                <input type="text" class="form-control" id="inputName" name="name" placeholder="用户名/账号/邮箱/手机号">
+            </div>
+        </div>
+        <div class="form-group">
+            <!--<label for="inputPwd" class="control-label col-xs-3">密码</label>-->
+            <div class="col-xs-12">
+                <input type="password" class="form-control" id="inputPwd" name="pwd" placeholder="密码">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="checkbox col-xs-12">
+                <label  class="col-xs-6">
+                    <input type="checkbox"> 记住密码
+                </label>
+                <label>
+                    <input type="checkbox"> 自动登录
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-12">
+                <button type="submit" class="btn btn-primary col-xs-12" id="login">登 录</button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-xs-12">
+                <a class="col-xs-5" href="/reg" role="link">忘记密码？</a>
+                <!--<a class="btn btn-default col-xs-5" href="/reg" role="button">忘记密码</a>-->
+                <span class=" col-xs-2"></span>
+                <a class="col-xs-5" href="/reg" role="link">去注册！</a>
+                <!--<a class="btn btn-default col-xs-5" href="/reg" role="button">注 册</a>-->
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.2/js/bootstrapValidator.min.js"></script>
+<script>
+    $('form').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            name: {
+                message: '用户名验证失败',
+                validators: {
+                    notEmpty: {
+                        message: '用户名不能为空'
+                    },
+                    stringLength: {
+                        min: 3,
+                        max: 30,
+                        message: '用户名最少4位最长30位'
+                    },
+                    different: {
+                        field: 'password',
+                        message: '账号不能和密码相同'
+                    }
+                }
+            },
+            pwd: {
+                validators: {
+                    notEmpty: {
+                        message: '邮箱地址不能为空'
+                    },
+                    different: {
+                        field: 'name',
+                        message: '密码不能和账号相同'
+                    },
+                    stringLength: {
+                        min: 4,
+                        message: '密码最少为8位'
+                    }
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>
