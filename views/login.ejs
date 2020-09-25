@@ -50,11 +50,11 @@
 <body>
 <div class="form">
     <div class="logo">
-        <img alt="logo" src="http://localhost:3000/images/favicon.ico">
+        <img alt="logo" src="/images/headImgDefault.png">
         <span>欢迎注册登录</span>
     </div>
     <!-- -->
-    <form class="form-horizontal" action="/login/login"  method="post" id="loginForm">
+    <form class="form-horizontal" action="/login"  method="post" id="loginForm">
         <div class="form-group  has-success has-feedback">
             <!--<label for="inputName" class="control-label col-xs-3">帐号</label>-->
             <div class="col-xs-12">
@@ -140,6 +140,32 @@
                 }
             }
         }
+    });
+    $(function() {
+        $('#login').click(
+            function () {
+                var pwd = $('#inputPwd').val();
+                var name = $('#inputName').val();
+                //alert('用户名 '+ name +'邮箱 '+email);
+                console.log('用户名 '+ name +'密码 '+ pwd);
+                if (pwd.length == 0 || name.length == 0) {
+                    alert("用户名和密码不能为空！");
+                    return;
+                } else {
+                    $.post(
+                        'http://localhost:3000/login',
+                        {
+                            userName: name,
+                            userEmail: pwd
+                        },
+                        function (result) {
+                            // alert(JSON.stringify(result.data));
+                            // $('#content').text(JSON.stringify(result));
+                        }
+                    );
+                }
+            }
+        );
     });
 </script>
 </body>

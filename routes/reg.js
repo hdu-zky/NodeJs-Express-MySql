@@ -40,17 +40,15 @@ var connection = mysql.createConnection({
 });
 connection.connect();
 /* GET home page. */
-router.get('/', function(req, res, next) {
-res.render('reg', { title: 'Express' });
-});
+// router.get('/', function(req, res, next) {
+// res.render('reg', { title: 'Express' });
+// });
 /***
 * 发送邮件
 */
-router.post('/sendEmail',function(req, res){
+exports.sendEmail = function(req, res){
     var userName = req.body.userName;
     var userEmail = req.body.userEmail;
-    // var userName = "req.body.name";
-    // var userEmail = 'zky3332342053@126.com';
     console.log('用户名 '+userName+'邮件 '+userEmail);
     var verifyCode = random(6, {letters: false});// 生成随机数
     sendMail('zky3332342053@126.com', '邮件小红娘', userEmail,
@@ -58,12 +56,12 @@ router.post('/sendEmail',function(req, res){
         '<h3>亲爱的'+ userName +',欢迎您的注册 </h3>' +
         '<p>以下是您的邮箱注册验证码，请将它输入到邮箱验证码输入框中</p>' +
         '<h4>'+verifyCode+'</h4>');
-    res.json({code: 200, msg: "dasdasd"});
-});
+    res.json({code: 200, msg: verifyCode});
+};
 /***
  * 注册功能
  */
-router.post('/reg',function(req,res){
+exports.register = function(req,res){
     var name = req.body.name;
     var pwd = req.body.pwd;
     var pwd2 = req.body.pwd2;
@@ -100,6 +98,8 @@ router.post('/reg',function(req,res){
         // res.json({code: 200, msg: "注册成功"});
         res.redirect("/login");
     })
-});
-
-module.exports = router;
+};
+exports.regHtml = function (req, res) {
+    res.render('reg');
+};
+// module.exports = router;

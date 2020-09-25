@@ -46,10 +46,10 @@
 <body>
     <div class="form">
         <div class="logo">
-            <img alt="logo" src="http://localhost:3000/images/favicon.ico">
+            <img alt="logo" src="/images/headImgDefault.png">
             <span>欢迎注册新账号</span>
         </div>
-        <form class="form-horizontal" action="/reg/reg"  method="post">
+        <form class="form-horizontal" action="/reg"  method="post">
             <div class="form-group">
                 <!--<label for="inputName" class="control-label col-xs-3">帐号</label>-->
                 <div class="col-xs-12">
@@ -69,6 +69,24 @@
                         <input type="text" class="form-control" id="verifyCode" name="verifyCode" placeholder="输入验证码">
                     </div>
                     <button class="btn btn-primary col-xs-5" id="getVerifyCode">获取验证码</button>
+                            <!--data-toggle="modal" data-target=".bs-example-modal-sm"-->
+                    <div class="modal fade bs-example-modal-sm" id="myModal"
+                         tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+                        <div class="modal-dialog modal-sm" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="gridSystemModalLabel">邮件发送提示</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div id="modal-msg"></div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="form-group">
@@ -232,13 +250,22 @@
                     return;
                 } else {
                     $.post(
-                        'http://localhost:3000/reg/sendEmail',
+                        'http://localhost:3000/sendEmail',
                         {
                             userName: name,
                             userEmail: email
                         },
                         function (result) {
-                            alert(JSON.stringify(result));
+                            if(result.code == 200){
+                                var sec = "<p>邮件发送成功，请到<a href=mailto:"+email;
+                                var sec1 = ">"+email+"</a>查看验证码</p>";
+                                console.log(sec+sec1);
+                                $('#modal-msg').html(sec+sec1);
+                                $('#myModal').modal('show');
+                            }else{
+                                alert("邮件发送失败");
+                            }
+                            // alert(JSON.stringify(result));
                             // $('#content').text(JSON.stringify(result));
                         }
                     );
