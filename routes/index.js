@@ -34,6 +34,10 @@ router.post('/login', login.Plogin);
 router.get('/logout', login.logout);
 
 router.get('/user', user.userHtml);
+router.get('/getProfile', user.getProfile);
+router.post('/updateProfile', user.updateProfile);
+router.get('/getAccount', user.getAccount);
+router.post('/updateAccount', user.updateAccount);
 router.post('/uploadFile', upload.single('myfile'), user.uploadFile);
 /* GET home page. */
 // router.get('/', function(req, res, next) {
