@@ -28,6 +28,7 @@ router.get('/', home.home);
 router.get('/reg', reg.regHtml);
 router.post('/sendEmail', reg.sendEmail);
 router.post('/reg', reg.register);
+router.post('/userName', reg.userName);
 
 router.get('/login', login.Glogin);
 router.post('/login', login.Plogin);

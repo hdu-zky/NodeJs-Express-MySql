@@ -29,14 +29,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 /* 中间件,判断用户是否登录 */
 app.use(function (req, res, next) {
-    if (req.url != '/login' && req.url!='/reg' && req.session.user === undefined) {
+    if (req.url != '/login' && req.url!='/reg' && req.url!='/userName' && req.session.user === undefined) {
         res.redirect('/login');
         return;
     }
-    res.locals.user = req.session.user;
-    res.locals.auths = req.session.auths;
-    res.locals.rolename = req.session.rolename;
-    res.locals.headImg = req.session.headImg;
+    // res.locals.user = req.session.user;
+    // res.locals.auths = req.session.auths;
+    // res.locals.rolename = req.session.rolename;
+    // res.locals.headImg = req.session.headImg;
     next();
 });
 app.use('/', indexRouter);

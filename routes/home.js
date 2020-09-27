@@ -6,6 +6,6 @@ exports.home = function (req, res) {
     userInfo={ //第二个参数分配模板
         uId: req.session.user,
         uName: req.session.rolename,
-        uImg: req.session.headImg,
+        // uImg: req.session.headImg,
     });
 };

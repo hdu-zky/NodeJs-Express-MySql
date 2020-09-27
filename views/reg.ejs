@@ -6,7 +6,7 @@
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.2/css/bootstrapValidator.min.css"/>
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>用户注册</title>
     <style>
         body{
             background-color: #f8f8f8!important;
@@ -115,7 +115,7 @@
             <div class="form-group">
                 <!--<label for="inputPwd" class="control-label col-xs-3"></label>-->
                 <div class="col-xs-12">
-                    <button type="submit" class="btn btn-primary col-xs-12" id="login">注 册</button>
+                    <button type="submit" class="btn btn-primary col-xs-12" id="register">注 册</button>
                 </div>
             </div>
             <div class="form-group">
@@ -146,7 +146,7 @@
                         message: '用户名不能为空'
                     },
                     stringLength: {
-                        min: 3,
+                        min: 4,
                         max: 30,
                         message: '用户名最少4位最长30位'
                     },
@@ -157,6 +157,18 @@
                     different: {
                         field: 'password',
                         message: '账号不能和密码相同'
+                    },
+                    threshold :  4 , //设置4字符以上开始请求服务器
+                    //有待验证，备注以备下次使用。
+                    //bootstrap的remote验证器需要的返回结果一定是json格式的数据 :
+                    //{"valid":false} //表示不合法，验证不通过
+                    //{"valid":true} //表示合法，验证通过
+                    remote: {//发起Ajax请求。
+                        url: '/userName',//验证地址
+                        // data:{name:$('input[name="name"]').val() },
+                        message: '用户名已存在',//提示消息
+                        delay :  2000,//设置2秒发起名字验证
+                        type: 'POST' //请求方式
                     }
                 }
             },
@@ -238,6 +250,7 @@
             }
         }
     });
+    // 发送验证码
     $(function() {
         $('#getVerifyCode').click(
             function () {

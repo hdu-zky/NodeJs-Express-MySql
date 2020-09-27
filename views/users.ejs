@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <!--<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.2/css/bootstrapValidator.min.css"/>-->
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.2/css/bootstrapValidator.min.css"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>用户个人信息</title>
 </head>
 <body>
@@ -36,23 +37,24 @@
             <!--右边侧内容区占10个栅格-->
             <div class="col-md-offset-1 col-md-10">
                 <div class="col-md-11">
-                    <h2 class="page-header">个人基本信息</h2>
+                    <h3 class="page-header">个人基本信息</h3>
                     <div class="">
                         <form  class="form-horizontal" action="/uploadFile" method="post" enctype="multipart/form-data">
                             <div class="form-group">
                                 <label for="uploadImg" class="col-md-2 control-label">头像:</label>
-                                <div class="col-md-3" id="uploadImg"  style="background-color: violet">
-                                    <img class="img-thumbnail" alt="头像"  id="headImg" src="/images/headImgDefault.png" style="width: 140px; height: 140px;">
+                                <div class="col-md-3" id="uploadImg">
+                                    <img class="img-thumbnail" alt="头像"  id="headImg" src="/images/headImgDefault.png"
+                                         style="width: 140px; height: 140px;">
                                 </div>
-                                <div class="col-md-2" style="background-color: olivedrab">
+                                <div class="col-md-1">
                                     <input type="file" style="float: left;margin-bottom: 10px;margin-top: 10px" name="myfile" id="myfile"/>
                                     <input type="submit" class="btn btn-primary" value="上传图片" id="upload"/>
                                 </div>
                             </div>
                         </form>
                     </div>
-                    <div id="form">
-                        <form class="form-horizontal" action="/updateProfile" method="post">
+                    <div class="">
+                        <form class="form-1 form-horizontal" action="/updateProfile" method="post">
                             <div class="form-group">
                                 <label for="inputNickName" class="col-md-2 control-label">昵称:</label>
                                 <div class="col-md-6">
@@ -97,9 +99,9 @@
         <div class="row">
         <div class="col-md-offset-1 col-md-10">
         <div class="col-md-11">
-        <div class="form">
-            <h2 class="page-header">个人账号信息</h2>
-            <form class="form-horizontal" action="/updateAccount"  method="post">
+        <div class="">
+            <h3 class="page-header">个人账号信息</h3>
+            <form class="form-2 form-horizontal" action="/updateAccount"  method="post">
                 <div class="form-group">
                     <label for="inputName" class="control-label col-md-2">用户名:</label>
                     <div class="col-md-6">
@@ -118,16 +120,10 @@
                         <input type="tel" class="form-control" id="inputPhone" name="phone" placeholder="">
                     </div>
                 </div>
-                <!--<div class="form-group">-->
-                    <!--<label for="inputPwd" class="control-label col-md-2">密码:</label>-->
-                    <!--<div class="col-md-6">-->
-                        <!--<input type="password" class="form-control" id="inputPwd" name="pwd" placeholder="" value="">-->
-                    <!--</div>-->
-                <!--</div>-->
                 <div class="form-group">
                     <label for="inputPwd" class="control-label col-md-2"></label>
                     <div class="col-md-6">
-                        <button type="submit" class="btn btn-primary col-xs-12" id="login">修改资料</button>
+                        <button type="submit" class="btn btn-primary col-xs-12" id="updateAccount">修改资料</button>
                     </div>
                 </div>
             </form>
@@ -138,11 +134,64 @@
     </div>
 
     <div class="tab-pane fade" id="regInfo">
-        <p>3</p>
-    </div>
-
-    <div class="tab-pane fade" id="D2">
-        <p>4</p>
+        <div class="row">
+            <div class="col-md-offset-1 col-md-10">
+                <div class="col-md-11">
+                    <div class="form-3">
+                        <h3 class="page-header">个人账号信息</h3>
+                        <form class="form-horizontal" action="/updateAccount"  method="post">
+                            <div class="form-group">
+                                <label for="inputPwd" class="control-label col-md-2">新密码:</label>
+                                <div class="col-md-6">
+                                    <input type="password" class="form-control" id="inputPwd" name="pwd" placeholder="" value="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputPwd2" class="control-label col-md-2">确认密码:</label>
+                                <div class="col-md-6">
+                                    <input type="password" class="form-control" id="inputPwd2" name="pwd2" placeholder="" value="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="verifyCode" class="control-label col-md-2">邮箱验证:</label>
+                                <div class="col-md-6" >
+                                    <input type="text" class="form-control" id="verifyCode" name="verifyCode" placeholder="输入验证码">
+                                </div>
+                                <div class="modal fade bs-example-modal-sm" id="myModal"
+                                     tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+                                    <div class="modal-dialog modal-sm" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="gridSystemModalLabel">邮件发送提示</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div id="modal-msg"></div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="getVerifyCode" class="control-label col-md-2"></label>
+                                <div class="col-md-6" >
+                                    <button class="btn btn-primary col-xs-12" id="getVerifyCode">获取验证码</button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="modifyPwd" class="control-label col-md-2"></label>
+                                <div class="col-md-6">
+                                    <button type="submit" class="btn btn-primary col-xs-12" id="modifyPwd">修改密码</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -150,6 +199,132 @@
 <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.2/js/bootstrapValidator.min.js"></script>
 <script>
+    $(function() {
+        $('.form-1').bootstrapValidator({
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                nickName: {
+                    message: '用户名验证失败',
+                    validators: {
+                        notEmpty: {
+                            message: '用户名不能为空'
+                        },
+                        stringLength: {
+                            min: 3,
+                            max: 30,
+                            message: '用户名最少4位最长30位'
+                        }
+                    }
+                },
+            }
+        });
+        $('.form-2').bootstrapValidator({
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                name: {
+                    message: '用户名验证失败',
+                    validators: {
+                        notEmpty: {
+                            message: '用户名不能为空'
+                        },
+                        stringLength: {
+                            min: 3,
+                            max: 30,
+                            message: '用户名最少4位最长30位'
+                        }
+                    }
+                },
+                email: {
+                    validators: {
+                        notEmpty: {
+                            message: '邮箱地址不能为空'
+                        },
+                        emailAddress: {
+                            message: '非法邮箱地址'
+                        }
+                    }
+                },
+                phone: {
+                    validators: {
+                        notEmpty: {
+                            message: '电话不能为空'
+                        },
+                        stringLength: {
+                            min: 11,
+                            max: 11,
+                            message: '电话号码11位'
+                        },
+                        regexp: {
+                            regexp: /^[0-9]+$/,
+                            message: '电话号码只能是数字'
+                        },
+                    }
+                },
+            }
+        });
+        $('.form-3').bootstrapValidator({
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                pwd: {
+                    validators: {
+                        notEmpty: {
+                            message: '密码不能为空'
+                        },
+                        stringLength: {
+                            min: 4,
+                            message: '密码最少为8位'
+                        }
+                    }
+                },
+                pwd2: {
+                    validators: {
+                        notEmpty: {
+                            message: '确认密码不能为空'
+                        },
+                        identical: {  //比较是否相同
+                            field: 'pwd',  //需要进行比较的input name值
+                            message: '两次密码不一致'
+                        },
+                        stringLength: {
+                            min: 4,
+                            message: '密码最少为4位'
+                        }
+                    }
+                },
+                verifyCode:{
+                    validators: {
+                        notEmpty: {
+                            message: '验证码不能为空'
+                        },
+                        stringLength: {
+                            min: 6,
+                            max: 6,
+                            message: '验证码6位'
+                        },
+                        regexp: {
+                            regexp: /^[0-9]+$/,
+                            message: '验证码只能是数字'
+                        },
+                    }
+                },
+            }
+        });
+    })
     //从服务器获取的数据
     var headImg, inputNickName, inputSex, inputTextarea;
     //修改后的表单数据
@@ -158,9 +333,7 @@
         //选项卡切换
         $('#myTab li:eq(1)a').tab('show');
         // 获取用户资料
-        $.get(
-            '/getProfile',
-            function ( res) {
+        $.get('/getProfile',function ( res) {
                 if(res.code == 200){
                     console.log(res.data);
                     headImg = res.data.headImg;
@@ -179,9 +352,7 @@
             }
         );
         // 获取用户资料
-        $.get(
-            '/getAccount',
-            function ( res) {
+        $.get('/getAccount',function ( res) {
                 if(res.code == 200){
                     console.log(res.data);
                     inputNickName = res.data.nickName;
@@ -206,15 +377,45 @@
     function changeImg (sel, src) {
         console.log(src);
         var localURL = window.webkitURL || window.URL;
-        if(sel==1){
+        if (sel == 1) {
             //如果有自己的头像，从服务器端加载
-            $('#headImg').attr('src',src);
-        }else{
+            $('#headImg').attr('src', src);
+        } else {
             //从本地加载
             var thisSrc = localURL.createObjectURL(document.getElementById('myfile').files[0]);//当前的地址
-            $('#headImg').attr('src',thisSrc);
+            $('#headImg').attr('src', thisSrc);
         }
     }
+    // 发送验证码
+    $(function() {
+        $('#getVerifyCode').click(
+            function () {
+                var email = $('#inputEmail').val();
+                var name = $('#inputName').val();
+                //alert('用户名 '+ name +'邮箱 '+email);
+                console.log('用户名 '+ inputNickName +'邮箱 '+email);
+                if (email.length == 0 || name.length == 0) {
+                    alert("用户名和邮箱不能为空！"+'用户名 '+ name +'邮箱 '+email);
+                    return;
+                } else {
+                    $.post('/sendEmail',{userName: name,userEmail: email},function (result) {
+                            if(result.code == 200){
+                                var sec = "<p>邮件发送成功，请到<a href=mailto:"+email;
+                                var sec1 = ">"+email+"</a>查看验证码</p>";
+                                console.log(sec+sec1);
+                                $('#modal-msg').html(sec+sec1);
+                                $('#myModal').modal('show');
+                            }else{
+                                alert("邮件发送失败");
+                            }
+                            // alert(JSON.stringify(result));
+                            // $('#content').text(JSON.stringify(result));
+                        }
+                    );
+                }
+            }
+        );
+    });
 </script>
 </body>
 </html>

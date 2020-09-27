@@ -9,7 +9,7 @@
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="Cache" content="no-cache">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.2/css/bootstrapValidator.min.css"/>
-    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <title>Document</title>
     <style>
         body{
@@ -53,8 +53,8 @@
         <img alt="logo" src="/images/headImgDefault.png">
         <span>欢迎注册登录</span>
     </div>
-    <!-- -->
-    <form class="form-horizontal" action="/login"  method="post" id="loginForm">
+    <!-- action="/login"  method="post" -->
+    <form class="form-horizontal"id="loginForm">
         <div class="form-group  has-success has-feedback">
             <!--<label for="inputName" class="control-label col-xs-3">帐号</label>-->
             <div class="col-xs-12">
@@ -62,10 +62,17 @@
             </div>
         </div>
         <div class="form-group">
-            <!--<label for="inputPwd" class="control-label col-xs-3">密码</label>-->
+            <!--<label for="inputPwd" class="control-label col-xs-3">密码</label> 看不清，换一张-->
             <div class="col-xs-12">
                 <input type="password" class="form-control" id="inputPwd" name="pwd" placeholder="密码">
             </div>
+        </div>
+        <div class="form-group" style="display: none" id="verifyCode">
+            <div class="col-xs-5">
+                <input type="text" class="form-control" placeholder="验证码" name="verifyCode" id="inputCode"/>
+            </div>
+            <span class="col-xs-6"><a href="#" id="changeImg"><canvas id="canvas" width="130" height="34"></canvas>
+            </a></span>
         </div>
         <div class="form-group">
             <div class="checkbox col-xs-12">
@@ -79,14 +86,14 @@
         </div>
         <div class="form-group">
             <div class="col-xs-12">
-                <button type="submit" class="btn btn-primary col-xs-12" id="login">登 录</button>
+                <button class="btn btn-primary col-xs-12" id="login">登 录</button>
             </div>
         </div>
 
         <div class="form-group">
             <div class="col-xs-12">
                 <a class="col-xs-5" href="/reg" role="link">忘记密码？</a>
-                <!--<a class="btn btn-default col-xs-5" href="/reg" role="button">忘记密码</a>-->
+                <!--<a class="btn btn-default col-xs-5" href="/reg" role="button">忘记密码</a> type="submit"-->
                 <span class=" col-xs-2"></span>
                 <a class="col-xs-5" href="/reg" role="link">去注册！</a>
                 <!--<a class="btn btn-default col-xs-5" href="/reg" role="button">注 册</a>-->
@@ -96,6 +103,7 @@
 </div>
 
 <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.2/js/bootstrapValidator.min.js"></script>
 <script>
@@ -127,7 +135,7 @@
             pwd: {
                 validators: {
                     notEmpty: {
-                        message: '邮箱地址不能为空'
+                        message: '密码不能为空'
                     },
                     different: {
                         field: 'name',
@@ -138,32 +146,143 @@
                         message: '密码最少为8位'
                     }
                 }
-            }
+            },
+            verifyCode: {
+                message: '验证码失败',
+                validators: {
+                    notEmpty: {
+                        message: '验证码不能为空'
+                    },
+                    stringLength: {
+                        min: 4,
+                        max: 4,
+                        message: '验证码4位'
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9]+$/,
+                        message: '验证码只能是数字和字母'
+                    },
+                }
+            },
         }
     });
+    var verifyCode='';
+    $(function() {
+        if( !$.cookie('login_error')){
+            $.cookie('login_error', '0');
+        }
+        //输错三次及以上账号密码
+        if($.cookie('login_error')!= null && parseInt( $.cookie('login_error') ) >=3 ){
+            $('#verifyCode').show();
+            verifyCode = drawPic();
+        }
+        // alert(parseInt( $.cookie('login_error')));
+    })
+    //调用画图方法画图并返回对应验证码
+    //点击验证码图时刷新
+    document.getElementById("changeImg").onclick = function(e){
+        e.preventDefault();
+        drawPic();
+    }
+    /**生成一个随机数**/
+    function randomNum(min,max){
+        return Math.floor( Math.random()*(max-min)+min);
+    }
+    /**生成一个随机色**/
+    function randomColor(min,max){
+        var r = randomNum(min,max);
+        var g = randomNum(min,max);
+        var b = randomNum(min,max);
+        return "rgb("+r+","+g+","+b+")";
+    }
+    /**绘制验证码图片**/
+    function drawPic(){
+        var canvas=document.getElementById("canvas");
+        var width=canvas.width;
+        var height=canvas.height;
+        var ctx = canvas.getContext('2d');
+        var vCode=''; //验证码
+        ctx.textBaseline = 'middle';
+
+        /**绘制背景色**/
+        ctx.fillStyle = randomColor(180,240); //颜色若太深可能导致看不清
+        ctx.fillRect(0,0,width,height);
+        /**绘制文字**/
+        var str = 'ABCEFGHJKLMNPQRSTWXY123456789';
+        for(var i=0; i<4; i++){
+            var txt = str[randomNum(0,str.length)];
+            vCode += txt;
+            ctx.fillStyle = randomColor(50,160);  //随机生成字体颜色
+            ctx.font = randomNum(30,40)+'px SimHei'; //随机生成字体大小
+            var x = 14+i*28;
+            var y = 18;
+            var deg = randomNum(-20, 20);
+            //修改坐标原点和旋转角度
+            ctx.translate(x,y);
+            ctx.rotate(deg*Math.PI/180);
+            ctx.fillText(txt, 0,0);
+            //恢复坐标原点和旋转角度
+            ctx.rotate(-deg*Math.PI/180);
+            ctx.translate(-x,-y);
+        }
+        /**绘制干扰线**/
+        for(var i=0; i<3; i++){
+            ctx.strokeStyle = randomColor(100,180);
+            ctx.beginPath();
+            ctx.moveTo( randomNum(0,width), randomNum(0,height) );
+            ctx.lineTo( randomNum(0,width), randomNum(0,height) );
+            ctx.stroke();
+        }
+        /**绘制干扰点**/
+        for(var i=0; i<8; i++){
+            ctx.fillStyle = randomColor(0,255);
+            ctx.beginPath();
+            ctx.arc(randomNum(0,width),randomNum(0,height), 1, 0, 2*Math.PI);
+            ctx.fill();
+        }
+        return vCode;
+    }
     $(function() {
         $('#login').click(
             function () {
-                var pwd = $('#inputPwd').val();
+                if( !$.cookie('login_error')){
+                    $.cookie('login_error', '0');
+                }
+                //输错三次及以上账号密码
+                if($.cookie('login_error')!= null && parseInt( $.cookie('login_error') ) >=3 ){
+                    verifyCode =drawPic();
+                    $('#verifyCode').show();
+                }
                 var name = $('#inputName').val();
-                //alert('用户名 '+ name +'邮箱 '+email);
+                var pwd = $('#inputPwd').val();
                 console.log('用户名 '+ name +'密码 '+ pwd);
                 if (pwd.length == 0 || name.length == 0) {
                     alert("用户名和密码不能为空！");
                     return;
-                } else {
-                    $.post(
-                        'http://localhost:3000/login',
-                        {
-                            userName: name,
-                            userEmail: pwd
-                        },
-                        function (result) {
-                            // alert(JSON.stringify(result.data));
-                            // $('#content').text(JSON.stringify(result));
-                        }
-                    );
                 }
+                if($('#inputCode').val()!='' && $('#inputCode').val().toLowerCase() ==''){
+                    alert("验证码不能为空！");
+                    return;
+                }
+                if($('#inputCode').val()!='' && $('#inputCode').val().toLowerCase() != verifyCode.toLowerCase()){
+                    alert("验证码错误！");
+                    return;
+                }
+                $.post('http://localhost:3000/login',
+                    {name: name,pwd: pwd},
+                    function (result) {
+                        alert(result.msg);
+                        if(result.success){
+                            window.location.href = "/";
+                            console.log(result.data);
+                        }else{
+                            // 登陆失败清除密码刷新图片
+                            $('#inputPwd').val('');
+                            verifyCode =drawPic();
+                        }
+                        // $('#content').text(JSON.stringify(result));
+                    }
+                );
             }
         );
     });

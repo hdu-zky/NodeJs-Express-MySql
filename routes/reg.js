@@ -102,4 +102,20 @@ exports.register = function(req,res){
 exports.regHtml = function (req, res) {
     res.render('reg');
 };
+exports.userName = function(req, res, next) {
+    var sql = "select nickName from user where nickName = '"+req.body.name+"' ";
+    console.log(req.body.name);
+    connection.query(sql,function(err, result){
+        if (err) throw err;
+        if(result.length != 0){
+            res.json({
+                "valid": false,
+            });
+        }else{
+            res.json({
+                "valid": true,
+            });
+        }
+    });
+};
 // module.exports = router;

@@ -31,6 +31,7 @@ var connection = mysql.createConnection({
 exports.userHtml = function(req, res, next) {
   res.render('users');
 };
+
 exports.getProfile = function(req, res, next){
     if(!req.session.rolename || !req.session.user){
         res.status(500).send({
@@ -160,6 +161,7 @@ exports.updateAccount =  function(req, res, next) {
     var nickName = req.body.name;
     var userEmail = req.body.email;
     var userPhone = req.body.phone;
+    console.log('updateAccount');
     if(!nickName ||!userEmail || !userPhone){
         res.json({
             code: 500,

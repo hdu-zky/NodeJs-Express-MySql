@@ -17,6 +17,7 @@ var router = express.Router();
 exports.Plogin = function(req, res, next){
     var name = req.body.name;
     var pwd = req.body.pwd;
+    console.log(name+pwd);
     var connection = mysql.createConnection({
         host:'localhost',
         port:'3306',
@@ -25,36 +26,37 @@ exports.Plogin = function(req, res, next){
         database:'nodeexpress'//修改为自己的数据库
     });
     connection.connect();
-    var query1 = "select userId, nickName, headImg" +
-        "  from user where (userId='"+name+"' or nickName='"+name+"' or userPhone='"+name+"'" +
-        " or userEmail='"+name+"') and passWord='"+pwd+"'";
+    // (userId='"+name+"' or nickName='"+name+"')
+    var query1 = "select userId, nickName, headImg, userPhone, userEmail" +
+        "  from user where nickName='"+name+"'and passWord='"+pwd+"'";
     connection.query(query1,function(err, result){
         if (err) throw err;
-        if(result.length==0){
+        if(result.length==1){
+            req.session.user = result[0].userId.toString();
+            req.session.auths = result[0].userId;
+            req.session.rolename = result[0].nickName;
+            req.session.headImg = result[0].headImg;
+            var userInfo={
+                userId: result[0].userId,
+                nickName: result[0].nickName,
+                userPhone: result[0].userPhone,
+                userEmail: result[0].userEmail,
+            };
+            console.log(userInfo);
+            res.cookie('token', 888888, {maxAge: 60 * 1000 * 60 * 24 * 7});
+            res.cookie('_user', result[0].userId, {maxAge: 60 * 1000 * 60 * 24 * 7});
+            res.clearCookie('login_error');
+            res.send({success: true, msg: '登录成功，欢迎' ,data: userInfo});
+            // res.redirect('/');
+
+        }else{
             if (req.cookies.login_error) {
                 res.cookie('login_error', parseInt(req.cookies.login_error) + 1, {maxAge: 60 * 1000 * 60 * 24 * 7});
             } else {
                 res.cookie('login_error', 1, {maxAge: 60 * 1000 * 60 * 24 * 7});
             }
-            // res.json({code: 500, data:{ msg:'用户名或密码错误' }});
-            // res.json(result);
-            res.redirect('/login');
-        }else{
-            req.session.user = result[0].userId.toString();
-            req.session.auths = result[0].userId;
-            req.session.rolename = result[0].nickName;
-            req.session.headImg = result[0].headImg;
-            // var userInfo={
-            //     userId: result[0].userId,
-            //     nickName: result[0].nickName,
-            //     userPhone: result[0].userPhone,
-            //     userEmail: result[0].userEmail,
-            // };
-            res.cookie('token', 888888, {maxAge: 60 * 1000 * 60 * 24 * 7});
-            res.cookie('_user', result[0].userId, {maxAge: 60 * 1000 * 60 * 24 * 7});
-            res.clearCookie('login_error');
-            // res.json({status: 200, res: '登录成功，欢迎' ,data: userInfo});
-            res.redirect('/');
+            res.send({success: false,  msg:'用户名或密码错误'});
+            // res.redirect('/login');
         }
     });
     // connection.end();
