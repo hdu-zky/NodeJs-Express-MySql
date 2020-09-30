@@ -2,32 +2,14 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>bootstrap标题</title>
+    <title>笔趣阁小说阅读</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <!--<link rel="stylesheet" href="bootstrap-3.3.7-dist/css/css/bootstrap.min.css">-->
 </head>
-
 <body>
-<!--
-<nav class="nav nav-tabs navbar-default" role="navigation">
-	<div class="container">
-		<a href="#" class="navbar-brand">home</a>
-		<a href="#" class="navbar-brand">message</a>
-		<a href="#" class="navbar-brand">contact</a>
-	</div>
-</nav>
-<ul class="nav nav-tabs">
-  <li class="active"><a href="#">Home</a></li>
-  <li><a href="#">SVN</a></li>
-  <li><a href="#">iOS</a></li>
-  <li><a href="#">VB.Net</a></li>
-  <li><a href="#">Java</a></li>
-  <li><a href="#">PHP</a></li>
-</ul>
--->
 <!--顶部导航栏-->
-<nav class="nav  nav-tabs navbar-default" role="navigation">
+<nav class="nav  nav-tabs navbar-inverse" role="navigation">
     <div class="container-fluid">
         <!--顶部左侧导航栏-->
         <div class="navbar-header">
@@ -38,14 +20,14 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">BootStrap入门</a>
+            <a  class="navbar-brand" href="/">笔趣阁手机版</a>
         </div>
         <!--顶部右侧导航-->
         <div class="collapse navbar-collapse" id="example-navbar-collapse">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="#">主页</a></li>
-                <li><a href="#">信息</a></li>
-                <li><a href="#">联系</a></li>
+                <!--<li class="active"><a href="#">主页</a></li>-->
+                <!--<li><a href="#">信息</a></li>-->
+                <!--<li><a href="#">联系</a></li>-->
             </ul>
             <!--个人信息下拉框-->
             <ul class="nav navbar-nav navbar-sub navbar-right">
@@ -55,7 +37,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                        aria-expanded="true">
                         <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                        欢迎，<%= userInfo.uName %><span class="caret"></span>
+                        <%= userInfo.uName %><span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
                         <li><a href="#">消息<span class="badge bg-warning">42</span></a></li>
@@ -75,290 +57,44 @@
 
 <!--<div class="container">-->
 <div class="row">
-    <!--左边侧导航栏占2个栅格-->
-    <div class="col-md-2" role="complementary">
-        <ul class="nav ">
-            <li >
-                <a href="#">Home</a>
-            </li>
-            <li ><a href="#table">table</a></li>
-            <li ><a href="#form">form</a></li>
-            <li ><a href="#form-Checkbox">form-Checkbox</a></li>
-            <li ><a href="#form-select">form-select</a></li>
-            <li ><a href="#form-control-static">form-control-static</a></li>
-            <li ><a href="#form-control-status">form-control-status</a></li>
-            <li ><a href="#button">button</a></li>
-            <li ><a href="#btn-group">btn-group</a></li>
-            <li ><a href="#btn-group-justified">btn-group-justified</a></li>
-            <li ><a href="#footer">footer</a></li>
-        </ul>
-    </div>
-
     <!--右边侧内容区占10个栅格-->
-    <div class="col-md-10" role="main">
-
-        <div class="col-md-11">
-            <div id="table">
-                <h2 class="page-header">表格</h2>
-                <p>
-                    为任意 &lt;table&gt; 标签添加 .table 类可以为其赋予基本的样式 — 少量的内补（padding）和水平方向的分隔线。这种方式看起来很多余！？但是我们觉得，表格元素使用的很广泛，如果我们为其赋予默认样式可能会影响例如日历和日期选择之类的插件，所以我们选择将此样式独立出来。
-                </p>
-                <table class="table table-bordered table-hover table-responsive col-md-6">
-                    <caption>上下文表格布局</caption>
-                    <thead>
-                    <tr>
-                        <th>产品</th>
-                        <th>付款日期</th>
-                        <th>状态</th></tr>
-                    </thead>
-                    <tbody>
-                    <tr class="active">
-                        <td>产品1</td>
-                        <td>23/11/2013</td>
-                        <td>待发货</td></tr>
-                    <tr class="success">
-                        <td>产品2</td>
-                        <td>10/11/2013</td>
-                        <td>发货中</td></tr>
-                    <tr class="warning">
-                        <td>产品3</td>
-                        <td>20/10/2013</td>
-                        <td>待确认</td></tr>
-                    <tr class="danger">
-                        <td>产品4</td>
-                        <td>20/10/2013</td>
-                        <td>已退货</td></tr>
-                    </tbody>
-                </table>
-            </div>
-            <div id="form">
-                <h2 class="page-header">表单</h2>
-                <p>
-                    为任意 &lt;table&gt; 标签添加 .table 类可以为其赋予基本的样式 — 少量的内补（padding）和水平方向的分隔线。这种方式看起来很多余！？但是我们觉得，表格元素使用的很广泛，如果我们为其赋予默认样式可能会影响例如日历和日期选择之类的插件，所以我们选择将此样式独立出来。
-                </p>
-                <form class="form-horizontal">
-                    <div class="form-group">
-                        <label for="inputEmail3" class="col-md-2 control-label">Email</label>
-                        <div class="col-md-6">
-                            <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="inputPassword3" class="col-md-2 control-label">Password</label>
-                        <div class="col-md-6">
-                            <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="inputTextarea" class="col-md-2 control-label">Textarea</label>
-                        <div class="col-md-6">
-                            <textarea class="form-control" rows="3" placeholder="inputTextarea"></textarea>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputFile" class="col-md-2 control-label">File input</label>
-                        <div class="col-md-6">
-                            <input type="file" id="exampleInputFile">
-                            <p class="help-block">Example block-level help text here.</p>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-7">
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox"> Remember me
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-7">
-                            <button type="submit" class="btn btn-default">Sign in</button>
-                        </div>
-                    </div>
-                </form>
-                <h3 id="form-Checkbox">
-                    复选框（Checkbox）和单选框（Radio）
-                </h3>
-                <p>
-                    复选框和单选按钮用于让用户从一系列预设置的选项中进行选择。
-                <ul>
-                    <li>当创建表单时，如果您想让用户从列表中选择若干个选项时，请使用 checkbox。</li>
-                    <li>如果您限制用户只能选择一个选项，请使用 radio。对一系列复选框和单选框使用 .checkbox-inline 或 .radio-inline class，控制它们显示在同一行上。</li>
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="header">
+            <nav role=" navbar-inverse navigation">
+                <ul class="nav nav-tabs nav-justified">
+                    <li><a href="/" class="active">首页</a></li>
+                    <li><a href="/sort">分类</a></li>
+                    <li><a href="#">排行</a></li>
+                    <li><a href="#">全本</a></li>
+                    <li><a href="#">书架</a></li>
                 </ul>
-                </p>
-                <label for="name">默认的复选框和单选按钮的实例</label>
-                <div class="checkbox">
-                    <label><input type="checkbox" value="">选项 1</label>
-                </div>
-                <div class="checkbox">
-                    <label><input type="checkbox" value="">选项 2</label>
-                </div>
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked> 选项 1
-                    </label>
-                </div>
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">选项 2 - 选择它将会取消选择选项 1
-                    </label>
-                </div>
-                <label for="name">内联的复选框和单选按钮的实例</label>
-                <div>
-                    <label class="checkbox-inline">
-                        <input type="checkbox" id="inlineCheckbox1" value="option1"> 选项 1
-                    </label>
-                    <label class="checkbox-inline">
-                        <input type="checkbox" id="inlineCheckbox2" value="option2"> 选项 2
-                    </label>
-                    <label class="checkbox-inline">
-                        <input type="checkbox" id="inlineCheckbox3" value="option3"> 选项 3
-                    </label>
-                    <label class="radio-inline">
-                        <input type="radio" name="optionsRadiosinline" id="optionsRadios3" value="option1" checked> 选项 1
-                    </label>
-                    <label class="radio-inline">
-                        <input type="radio" name="optionsRadiosinline" id="optionsRadios4"  value="option2"> 选项 2
-                    </label>
-                </div>
-                <h3 id="form-select">选择框（Select）</h3>
-                <p>当您想让用户从多个选项中进行选择，但是默认情况下只能选择一个选项时，则使用选择框。
-                <ul>
-                    <li>使用 <code>select</code>展示列表选项，通常是那些用户很熟悉的选择列表，比如州或者数字。</li>
-                    <li>使用 multiple="multiple" 允许用户选择多个选项。</li>
-                </ul>
-                下面的实例演示了这两种类型（select 和 multiple）：
-                </p>
-                <form role="form">
-                    <div class="form-group">
-                        <label for="name">选择列表</label>
-                        <select class="form-control">
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
-                        </select>
-                        <label for="name">可多选的选择列表</label>
-                        <select multiple class="form-control">
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
-                        </select>
-                    </div>
-                </form>
-                <h3 id="form-control-static">静态控件</h3>
-                <p>当您需要在一个水平表单内的表单标签后放置纯文本时，请在 &lt;p&gt; 上使用 class .form-control-static。</p>
-                <form class="form-horizontal" role="form">
-                    <div class="form-group">
-                        <label class="col-md-2 control-label">Email</label>
-                        <div class="col-md-9">
-                            <p class="form-control-static">email@example.com</p>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="inputPassword" class="col-md-2 control-label">密码</label>
-                        <div class="col-md-9">
-                            <input type="password" class="form-control" id="inputPassword" placeholder="请输入密码">
-                        </div>
-                    </div>
-                </form>
-                <h3 id="form-control-status">表单控件状态</h3>
-                <p>除了 :focus 状态（即，用户点击 input 或使用 tab 键聚焦到 input 上），Bootstrap 还为禁用的输入框定义了样式，并提供了表单验证的 class。</p>
-                <p>Bootstrap 包含了错误、警告和成功消息的验证样式。只需要对父元素简单地添加适当的 class（.has-warning、 .has-error 或 .has-success）即可使用验证状态。</p>
-                <form class="form-horizontal" role="form">
-                    <div class="form-group">
-                        <label class="col-md-2 control-label">聚焦</label>
-                        <div class="col-md-9">
-                            <input class="form-control" id="focusedInput" type="text" value="该输入框获得焦点...">
-                        </div>
-                    </div>
-                    <div class="form-group has-success">
-                        <label class="col-md-2 control-label" for="inputSuccess">输入成功</label>
-                        <div class="col-md-9">
-                            <input type="text" class="form-control" id="inputSuccess">
-                        </div>
-                    </div>
-                    <div class="form-group has-warning">
-                        <label class="col-md-2 control-label" for="inputWarning">输入警告</label>
-                        <div class="col-md-9">
-                            <input type="text" class="form-control" id="inputWarning">
-                        </div>
-                    </div>
-                    <div class="form-group has-error">
-                        <label class="col-md-2 control-label" for="inputError">输入错误</label>
-                        <div class="col-md-9">
-                            <input type="text" class="form-control" id="inputError">
-                        </div>
-                    </div>
-                </form>
-                <h2 id="button" class="page-header">按钮</h2>
-                <p>下面的实例演示了上面所有的按钮 class：</p>
-                <!-- 标准的按钮 -->
-                <button type="button" class="btn btn-default">默认按钮</button>
-                <!-- 提供额外的视觉效果，标识一组按钮中的原始动作 -->
-                <button type="button" class="btn btn-primary">原始按钮</button>
-                <!-- 表示一个成功的或积极的动作 -->
-                <button type="button" class="btn btn-success">成功按钮</button>
-                <!-- 信息警告消息的上下文按钮 -->
-                <button type="button" class="btn btn-info">信息按钮</button>
-                <!-- 表示应谨慎采取的动作 -->
-                <button type="button" class="btn btn-warning">警告按钮</button>
-                <!-- 表示一个危险的或潜在的负面动作 -->
-                <button type="button" class="btn btn-danger">危险按钮</button>
-                <!-- 并不强调是一个按钮，看起来像一个链接，但同时保持按钮的行为 -->
-                <button type="button" class="btn btn-link">链接按钮</button>
-                <h3 id="btn-group">按钮组</h3>
-                <p>在 div 中直接使用 .btn-group 可以创建按钮组：</p>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-primary">Apple</button>
-                    <button type="button" class="btn btn-primary">Samsung</button>
-                    <button type="button" class="btn btn-primary">Sony</button>
-                </div>
-                <p>使用 .btn-group-lg|md|xs 来控制按钮组的大小：</p>
-                <div class="btn-group btn-group-lg">
-                    <button type="button" class="btn btn-primary">Apple</button>
-                    <button type="button" class="btn btn-primary">Samsung</button>
-                    <button type="button" class="btn btn-primary">Sony</button>
-                </div>
-                <p>如果要设置垂直方向的按钮可以通过 .btn-group-vertical 类来设置：</p>
-                <div class="btn-group-vertical">
-                    <button type="button" class="btn btn-primary">Apple</button>
-                    <button type="button" class="btn btn-primary">Samsung</button>
-                    <button type="button" class="btn btn-primary">Sony</button>
-                </div>
-                <h3 id="btn-group-justified"></h3>自适应大小的按钮组
-                <p>可以通过 .btn-group-justified 类来设置自适应大小的按钮组。</p>
-                <p>以下实例使用 a 标签来展示：</p>
-                <div class="btn-group btn-group-justified">
-                    <a href="#" class="btn btn-primary">Apple</a>
-                    <a href="#" class="btn btn-primary">Samsung</a>
-                    <a href="#" class="btn btn-primary">Sony</a>
-                </div>
-            </div>
+            </nav>
         </div>
     </div>
 </div>
+<div class="container">
+    <div class="row" style="margin-top: 1ex;margin-bottom: 1cm">
+        <!--<div class="col- col-lg-10"> -->
+            <div class="input-group">
+                <div class="input-group-btn">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action <span class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">Separated link</a></li>
+                    </ul>
+                </div><!-- /btn-group -->
+                <input type="text" class="form-control" placeholder="Search for...">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button">Go!</button>
+                </span>
+            </div>
+        </div>
+    <!--</div>-->
+</div>
 
-<footer id="footer">
-    <div class="container-fluid">
-        <nav role="navigation">
-            <ul class="nav nav-tabs col-md-offset-2">
-                <li><a href="#">关于我们</a></li>
-                <li><a href="#">联系客服</a></li>
-                <li><a href="#">友情链接</a></li>
-                <li><a href="#">意见反馈</a></li>
-            </ul>
-        </nav>
-    </div>
-</footer>
-
-
-<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
-<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<!--<script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>-->
+<%- include footer %>
 </body>
 </html>

@@ -17,7 +17,7 @@ var router = express.Router();
 exports.Plogin = function(req, res, next){
     var name = req.body.name;
     var pwd = req.body.pwd;
-    console.log(name+pwd);
+    // console.log(name+pwd);
     var connection = mysql.createConnection({
         host:'localhost',
         port:'3306',
@@ -27,10 +27,13 @@ exports.Plogin = function(req, res, next){
     });
     connection.connect();
     // (userId='"+name+"' or nickName='"+name+"')
-    var query1 = "select userId, nickName, headImg, userPhone, userEmail" +
-        "  from user where nickName='"+name+"'and passWord='"+pwd+"'";
+    var query1 = "select userId, nickName, headImg, userPhone, userEmail from user" +
+        " where( userId='"+name+"' or nickName='"+name+"')"+
+        // " where nickName='"+name+"'" +
+        "and passWord='"+pwd+"'";
     connection.query(query1,function(err, result){
         if (err) throw err;
+        //如果检索到数据
         if(result.length==1){
             req.session.user = result[0].userId.toString();
             req.session.auths = result[0].userId;
@@ -42,7 +45,8 @@ exports.Plogin = function(req, res, next){
                 userPhone: result[0].userPhone,
                 userEmail: result[0].userEmail,
             };
-            console.log(userInfo);
+            // console.log(userInfo);
+            //返回cookie
             res.cookie('token', 888888, {maxAge: 60 * 1000 * 60 * 24 * 7});
             res.cookie('_user', result[0].userId, {maxAge: 60 * 1000 * 60 * 24 * 7});
             res.clearCookie('login_error');
@@ -76,6 +80,10 @@ exports.Glogin = function (req, res) {
 exports.logout = function (req, res) {
     res.clearCookie('token');
     res.clearCookie('_user');
+    res.clearCookie('saveAcc');
+    res.clearCookie('autoSign');
+    res.clearCookie('username');
+    res.clearCookie('password');
     req.session.destroy();
     res.redirect('/login');
 };

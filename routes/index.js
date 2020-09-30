@@ -5,6 +5,7 @@ var home = require('../routes/home');
 var user = require('../routes/users');
 var login = require('../routes/login');
 var reg = require('../routes/reg');
+var sort = require('../routes/sort');
 var storage = multer.diskStorage({
     //设置上传后文件路径，uploads文件夹需要手动创建！！！
     destination: function (req, file, cb) {
@@ -40,6 +41,10 @@ router.post('/updateProfile', user.updateProfile);
 router.get('/getAccount', user.getAccount);
 router.post('/updateAccount', user.updateAccount);
 router.post('/uploadFile', upload.single('myfile'), user.uploadFile);
+
+router.get('/sort', sort.rootHTML);
+router.post('/sort', sort.getSortBook);
+router.post('/searchBook', sort.searchBook);
 /* GET home page. */
 // router.get('/', function(req, res, next) {
 //   res.render('index', { title: 'Express' });

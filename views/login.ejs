@@ -77,10 +77,10 @@
         <div class="form-group">
             <div class="checkbox col-xs-12">
                 <label  class="col-xs-6">
-                    <input type="checkbox"> 记住密码
+                    <input type="checkbox" id="saveAcc"> 记住密码
                 </label>
                 <label>
-                    <input type="checkbox"> 自动登录
+                    <input type="checkbox" id="autoSign"> 自动登录
                 </label>
             </div>
         </div>
@@ -106,6 +106,7 @@
 <script src="https://cdn.staticfile.org/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.2/js/bootstrapValidator.min.js"></script>
+<script src="/javascripts/jquery.base64.js"></script>
 <script>
     $('form').bootstrapValidator({
         message: 'This value is not valid',
@@ -143,7 +144,7 @@
                     },
                     stringLength: {
                         min: 4,
-                        message: '密码最少为8位'
+                        message: '密码最少为4位'
                     }
                 }
             },
@@ -268,12 +269,13 @@
                     alert("验证码错误！");
                     return;
                 }
-                $.post('http://localhost:3000/login',
+                $.post('http://192.168.0.109:3000/login',
                     {name: name,pwd: pwd},
                     function (result) {
                         alert(result.msg);
                         if(result.success){
-                            window.location.href = "/";
+                            saveAccount();
+                            window.location.href = "http://192.168.0.109:3000/";
                             console.log(result.data);
                         }else{
                             // 登陆失败清除密码刷新图片
@@ -286,6 +288,39 @@
             }
         );
     });
+    $(document).ready(function () {
+        //cookie里保存账密项为真则展示相应数据
+        if ($.cookie("saveAcc") == "true") {
+            $("#saveAcc").prop("checked", true);
+            $("#inputName").val($.cookie("username"));
+            $("#inputPwd").val($.base64.decode( $.cookie("password") ));
+            // 自动登录为真
+            if($.cookie("autoSign") == "true"){
+                $("#autoSign").prop("checked", true);
+                $("#login").click();
+            }
+        }
+    });
+    // 保存账号密码到cookie以自动登录
+    function saveAccount() {
+        if ($("#saveAcc").prop("checked")) {
+            var str_username = $("#inputName").val();
+            var str_password = $("#inputPwd").val();
+            $.cookie("saveAcc", "true", { expires: 7 }); //存储一个带7天期限的cookie
+            $.cookie("username", str_username, { expires: 7 });
+            $.cookie("password", $.base64.encode(str_password), { expires: 7 });
+        }
+        else {
+            $.cookie("saveAcc", "false", { expire: -1 });
+            $.cookie("username", "", { expires: -1 });
+            $.cookie("password", "", { expires: -1 });
+        }
+        if($("#autoSign").prop("checked")){
+            $.cookie("autoSign", "true", { expires: 7 }); //存储一个带7天期限的cookie
+        }else{
+            $.cookie("autoSign", "false", { expire: -1 });
+        }
+    };
 </script>
 </body>
 </html>
