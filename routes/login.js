@@ -62,6 +62,7 @@ exports.Plogin = function(req, res, next){
             res.send({success: false,  msg:'用户名或密码错误'});
             // res.redirect('/login');
         }
+        connection.end();
     });
     // connection.end();
 };

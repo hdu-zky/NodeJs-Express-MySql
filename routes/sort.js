@@ -48,6 +48,7 @@ exports.getSortBook = function (req, res, next) {
             res.send({success: true,  pageCount: 0, data:{}});
             // res.redirect('/login');
         }
+        connection.end();
     });
 };
 //查找书籍或作者
@@ -71,5 +72,6 @@ exports.searchBook = function(req, res, next){
         }else{
             res.send({success: false, data: {}});
         }
+        connection.end();
     })
 };

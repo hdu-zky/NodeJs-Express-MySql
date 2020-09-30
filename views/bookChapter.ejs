@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>笔趣阁小说阅读</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <!--<link rel="stylesheet" href="/stylesheets/bookInfo.css">-->
+</head>
+<style>
+    body{
+        background: #F8F0DD;
+    }
+    #content{
+        font-size: 18px;
+    }
+</style>
+<body>
+<div class="container">
+    <h3 class="text-center"><%= bookTxt.chapterTitle %></h3>
+    <div id="content"></div>
+</div>
+
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script>
+    $(function () {
+        var success = '<%= bookTxt.success %>'
+        if(success != '200'){
+            return;
+        }
+        var chapterContentUrl = '<%= bookTxt.chapterContentUrl %>'
+        console.log(chapterContentUrl);
+        $.post('http://192.168.0.109:3000/bookChapter/getBookContent', {chapterContentUrl: chapterContentUrl},
+            function (result) {
+                if (result.success) {
+                    var html = result.bookContent;
+                    console.log(result.bookContent);
+                    document.getElementById('content').innerHTML = html;
+                }
+            }
+        )
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>笔趣阁小说阅读</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/stylesheets/bookInfo.css">
+</head>
+<style>
+
+</style>
+<body>
+<!--顶部导航栏-->
+<nav class="nav  nav-tabs navbar-inverse" role="navigation">
+    <div class="container-fluid">
+        <!--顶部左侧导航栏-->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#example-navbar-collapse">
+                <span class="sr-only">切换导航</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a  class="navbar-brand" href="/">笔趣阁手机版</a>
+        </div>
+        <!--顶部右侧导航-->
+        <div class="collapse navbar-collapse" id="example-navbar-collapse">
+            <!--个人信息下拉框-->
+            <ul class="nav navbar-nav navbar-sub navbar-right">
+                <!--如果是已经登陆展示的样式-->
+                <% if (userInfo.uId) { %>
+                    <li class="nav navbar-nav dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="true">
+                            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                            欢迎，<%= userInfo.uName %><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">消息<span class="badge bg-warning">42</span></a></li>
+                            <li><a href="/user">个人信息</a></li>
+                            <li><a href="/logout">退出</a></li>
+                        </ul>
+                    </li>
+                    <!--如果还未登录展示的样式-->
+                <% }  else { %>
+                    <li><a href="/login">登入</a></li>
+                    <li><a href="/reg">注册</a></li>
+                <% } %>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="header">
+    <!--<nav role=" navbar-inverse navigation">-->
+    <ul class="">
+        <li class="col-sm-3 col-xs-3"><a href="/sort" class="active">分类</a></li>
+        <li class="col-sm-3 col-xs-3"><a href="#">排行</a></li>
+        <li class="col-sm-3 col-xs-3"><a href="#">全本</a></li>
+        <li class="col-sm-3 col-xs-3"><a href="#">书架</a></li>
+    </ul>
+    <!--</nav>-->
+</div>
+<div class="container" style="margin-top: 15px">
+    <div class="row">
+        <div class="col-sm-12 col-xs-12">
+            <label class="control-label sr-only" for="searchBook">搜索框</label>
+            <div class="input-group form-group">
+                <input type="text" class="form-control" placeholder="输入书名/作者名查找" id="inputBook">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" id="searchBook" onclick="searchBook()">搜索</button>
+            </span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="">
+            <div class="col-sm-4 col-xs-4 col-md-2 col-lg-2">
+                <img class="img-thumbnail" alt="封面" id="bookImg" src='<%= bookData.bookImg %>' style="width: 110px; height: 120px;">
+            </div>
+            <div class="col-sm-8 col-xs-8 col-md-10  col-lg-10 block_txt">
+                <p><a href='/bookInfo/<%= bookData.bookId %>'><%= bookData.bookName %></a></p>
+                <p>作者：<a href='/author/<%= bookData.authorName %>'><%= bookData.authorName %></a></p>
+                <p>分类：<%= bookData.bookTypeName %></p>
+                <p>状态：<% if (bookData.status == 1) { %>连载中<% }else { %>已完结<% } %></p>
+                <p>更新：<%= bookData.updateTime %></p>
+                <p>最新：<a href="/bookChapter/<%= bookData.bookId %>/2">震惊！让男人沉默女人流泪的真相，不可不看！（其实是完本感言）</a></p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-xs-12">
+        <div class="ablum_read">
+            <span class="margin_right"><a href="javascript:download('校园修仙');">合集下载</a></span>
+            <span><a href="/wapbook-673/">加入书架</a></span>
+        </div>
+        </div>
+    </div>
+
+    <div class="intro">小说简介</div>
+    <div class="intro_info">
+        　　自盘古开天，三皇治世，五帝定伦，世界之间，人为天地灵长……此时正值三皇中的人皇末期，五帝未定，
+        人族也不是天地灵长。这里是莽苍荒蛮的时代，妖神、邪神、天神，诸神林立，妖魔、邪魔、天魔，群魔乱舞；万族并存，
+        野蛮生长，统治天下，而人皇已老，人族弱小，被当成祭牲和食粮……这不是洪荒，而是狂野奔放的蛮荒！回归中国古典神话，
+        书写人族逆袭的蛮荒传奇，敬请阅读《人道至尊》！
+    </div>
+    <div class="intro">最新章节预览</div>
+    <ul class="chapter">
+        <li><a href="/bookChapter/2020/1">第一章 时间方恨少<span></span></a></li>
+        <li><a href="/bookChapter/2020/2">第二章 声名远扬<span></span></a></li>
+        <li><a href="/bookChapter/2020/3">第三章 湖边老头<span></span></a></li>
+        <li><a href="/bookChapter/2020/4">第四章 变化<span></span></a></li>
+        <li><a href="/bookChapter/2020/5">第五章 同学被打<span></span></a></li>
+        <li><a href="/bookChapter/2020/6">第六章 考试<span></span></a></li>
+        <li><a href="/bookChapter/2020/7">第七章 注定的悲哀<span></span></a></li>
+        <li><a href="/bookChapter/2020/8">第八章 考试结束<span></span></a></li>
+        <li><a href="/bookChapter/2020/9">第九章 精神攻击<span></span></a></li>
+        <li><a href="/bookChapter/2020/10">第十章 家族会议<span></span></a></li>
+        <li><a href="/wapbook-673-499961/">第十一章 预警<span></span></a></li>
+        <li><a href="/wapbook-673-499962/">第十二章 梦瑶心伤<span></span></a></li>
+        <li><a href="/wapbook-673-499963/">第十三章 梦瑶遇险<span></span></a></li>
+        <li><a href="/wapbook-673-499964/">第十四章 公布成绩<span></span></a></li>
+        <li><a href="/wapbook-673-499965/">第十五章 遭遇车祸<span></span></a></li>
+        <li><a href="/wapbook-673-499966/">第十六章 横生枝节<span></span></a></li>
+        <li><a href="/wapbook-673-499967/">第十七章 表白<span></span></a></li>
+        <li><a href="/wapbook-673-499968/">第十八章 打赌<span></span></a></li>
+        <li><a href="/wapbook-673-499969/">第十九章 紫玉邀请<span></span></a></li>
+        <li><a href="/wapbook-673-499970/">第二十章 指尖的温柔<span></span></a></li>
+    </ul>
+    <div class="row">
+        <div class="col-sm-12 col-xs-12">
+            <button type="button" class="btn btn-primary" style="width: 26%;margin-right: 2%;">上一页</button>
+            <!--<span class=" col-xs-1"></span>-->
+            <select class="" style="height: 34px;width: 40%;margin-right: 2%;border-radius: 5px;">
+                <option>第1 - 20章</option>
+                <option>Ketchup</option>
+                <option>Relish</option>
+                <option>Relish</option>
+                <option>Relish</option>
+                <option>Relish</option>
+                <option>Relish</option>
+                <option>Relish</option>
+                <option>Relish</option>
+                <option>Relish</option>
+            </select>
+            <!--<span class="col-xs-1"></span>-->
+            <button type="button" class="btn btn-primary " style="width: 26%;">下一页</button>
+        </div>
+    </div>
+
+</div>
+<div class="footer" style="margin-top: 60px">
+    <ul>
+        <li><a href="/">首页</a></li>
+        <li><a href="/">友情链接</a></li>
+        <li><a href="/home/">书架</a></li>
+        <li><a href="/" style="color:red">意见反馈</a></li>
+    </ul>
+</div>
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script>
+    var bookId = '<%= bookData.bookId %>';
+    $(function () {
+        console.log(bookId);
+    })
+</script>
+</body>
+</html>

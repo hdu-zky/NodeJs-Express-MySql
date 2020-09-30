@@ -6,6 +6,8 @@ var user = require('../routes/users');
 var login = require('../routes/login');
 var reg = require('../routes/reg');
 var sort = require('../routes/sort');
+var bookInfo = require('../routes/bookInfo');
+var bookChapter = require('../routes/bookChapter');
 var storage = multer.diskStorage({
     //设置上传后文件路径，uploads文件夹需要手动创建！！！
     destination: function (req, file, cb) {
@@ -45,6 +47,11 @@ router.post('/uploadFile', upload.single('myfile'), user.uploadFile);
 router.get('/sort', sort.rootHTML);
 router.post('/sort', sort.getSortBook);
 router.post('/searchBook', sort.searchBook);
+
+router.get('/bookInfo/:id', bookInfo.bookInfoHTML);
+
+router.get('/bookChapter/:bookId/:textId', bookChapter.bookChapterHTML);
+router.post('/bookChapter/getBookContent', bookChapter.getBookContent);
 /* GET home page. */
 // router.get('/', function(req, res, next) {
 //   res.render('index', { title: 'Express' });
