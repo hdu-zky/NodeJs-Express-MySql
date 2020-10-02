@@ -9,3 +9,6 @@ exports.home = function (req, res) {
         // uImg: req.session.headImg,
     });
 };
+// exports.favicon = function (req, res) {
+//     res.send('favicon');
+// };

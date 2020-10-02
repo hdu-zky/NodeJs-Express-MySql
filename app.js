@@ -5,10 +5,7 @@ var logger = require('morgan');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var indexRouter = require('./routes/index.js');
-// var usersRouter = require('./routes/users');
-// var loginRouter = require('./routes/login');
-// var regRouter = require('./routes/reg');
+var router = require('./routes/router.js');
 var app = express();
 
 app.all('*', function(req, res, next) {
@@ -51,7 +48,7 @@ app.use(function (req, res, next) {
     // res.locals.headImg = req.session.headImg;
     next();
 });
-app.use('/', indexRouter);
+app.use('/', router);
 // app.use('/login', loginRouter);
 // app.use('/users', usersRouter);
 // app.use('/reg', regRouter);

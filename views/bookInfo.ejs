@@ -54,14 +54,12 @@
 </nav>
 
 <div class="header">
-    <!--<nav role=" navbar-inverse navigation">-->
     <ul class="">
         <li class="col-sm-3 col-xs-3"><a href="/sort" class="active">分类</a></li>
         <li class="col-sm-3 col-xs-3"><a href="#">排行</a></li>
         <li class="col-sm-3 col-xs-3"><a href="#">全本</a></li>
-        <li class="col-sm-3 col-xs-3"><a href="#">书架</a></li>
+        <li class="col-sm-3 col-xs-3"><a href="/bookShelf">书架</a></li>
     </ul>
-    <!--</nav>-->
 </div>
 <div class="container" style="margin-top: 15px">
     <div class="row">
@@ -88,7 +86,8 @@
                 <p>分类：<%= bookData.bookTypeName %></p>
                 <p>状态：<% if (bookData.status == 1) { %>连载中<% }else { %>已完结<% } %></p>
                 <p>更新：<%= bookData.updateTime %></p>
-                <p>最新：<a href="/bookChapter/<%= bookData.bookId %>/2">震惊！让男人沉默女人流泪的真相，不可不看！（其实是完本感言）</a></p>
+                <p>最新：<a href="/bookChapter/<%= bookData.bookId %>/<%= bookData.latestChapter %>">
+                        <%= bookData.latestChTitle %></a></p>
             </div>
         </div>
     </div>
@@ -103,52 +102,20 @@
 
     <div class="intro">小说简介</div>
     <div class="intro_info">
-        　　自盘古开天，三皇治世，五帝定伦，世界之间，人为天地灵长……此时正值三皇中的人皇末期，五帝未定，
-        人族也不是天地灵长。这里是莽苍荒蛮的时代，妖神、邪神、天神，诸神林立，妖魔、邪魔、天魔，群魔乱舞；万族并存，
-        野蛮生长，统治天下，而人皇已老，人族弱小，被当成祭牲和食粮……这不是洪荒，而是狂野奔放的蛮荒！回归中国古典神话，
-        书写人族逆袭的蛮荒传奇，敬请阅读《人道至尊》！
+        <%= bookData.Introduction %>
     </div>
     <div class="intro">最新章节预览</div>
-    <ul class="chapter">
-        <li><a href="/bookChapter/2020/1">第一章 时间方恨少<span></span></a></li>
-        <li><a href="/bookChapter/2020/2">第二章 声名远扬<span></span></a></li>
-        <li><a href="/bookChapter/2020/3">第三章 湖边老头<span></span></a></li>
-        <li><a href="/bookChapter/2020/4">第四章 变化<span></span></a></li>
-        <li><a href="/bookChapter/2020/5">第五章 同学被打<span></span></a></li>
-        <li><a href="/bookChapter/2020/6">第六章 考试<span></span></a></li>
-        <li><a href="/bookChapter/2020/7">第七章 注定的悲哀<span></span></a></li>
-        <li><a href="/bookChapter/2020/8">第八章 考试结束<span></span></a></li>
-        <li><a href="/bookChapter/2020/9">第九章 精神攻击<span></span></a></li>
-        <li><a href="/bookChapter/2020/10">第十章 家族会议<span></span></a></li>
-        <li><a href="/wapbook-673-499961/">第十一章 预警<span></span></a></li>
-        <li><a href="/wapbook-673-499962/">第十二章 梦瑶心伤<span></span></a></li>
-        <li><a href="/wapbook-673-499963/">第十三章 梦瑶遇险<span></span></a></li>
-        <li><a href="/wapbook-673-499964/">第十四章 公布成绩<span></span></a></li>
-        <li><a href="/wapbook-673-499965/">第十五章 遭遇车祸<span></span></a></li>
-        <li><a href="/wapbook-673-499966/">第十六章 横生枝节<span></span></a></li>
-        <li><a href="/wapbook-673-499967/">第十七章 表白<span></span></a></li>
-        <li><a href="/wapbook-673-499968/">第十八章 打赌<span></span></a></li>
-        <li><a href="/wapbook-673-499969/">第十九章 紫玉邀请<span></span></a></li>
-        <li><a href="/wapbook-673-499970/">第二十章 指尖的温柔<span></span></a></li>
-    </ul>
+    <ul class="chapter" id="latestCatalog"></ul>
+    <div class="intro">章节目录</div>
+    <!--章节目录-->
+    <ul class="chapter" id="catalog"></ul>
     <div class="row">
         <div class="col-sm-12 col-xs-12">
-            <button type="button" class="btn btn-primary" style="width: 26%;margin-right: 2%;">上一页</button>
-            <!--<span class=" col-xs-1"></span>-->
-            <select class="" style="height: 34px;width: 40%;margin-right: 2%;border-radius: 5px;">
-                <option>第1 - 20章</option>
-                <option>Ketchup</option>
-                <option>Relish</option>
-                <option>Relish</option>
-                <option>Relish</option>
-                <option>Relish</option>
-                <option>Relish</option>
-                <option>Relish</option>
-                <option>Relish</option>
-                <option>Relish</option>
+            <button type="button" class="btn btn-primary prevPage" onclick="getPage(-1)">上一页</button>
+            <select class="selectIndex" id="selectIndex" onchange="getCatalog()" style="color: #333333">
+                <option value="0">第1 - 20章</option>
             </select>
-            <!--<span class="col-xs-1"></span>-->
-            <button type="button" class="btn btn-primary " style="width: 26%;">下一页</button>
+            <button type="button" class="btn btn-primary nextPage" onclick="getPage(1)">下一页</button>
         </div>
     </div>
 
@@ -164,10 +131,112 @@
 <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script>
-    var bookId = '<%= bookData.bookId %>';
+    const bookId = '<%= bookData.bookId %>';
+    var catalogCount = '<%= bookData.pageCount %>';
+    //当前目录页面序号
+    var catalogIndex=0;
     $(function () {
-        console.log(bookId);
+        getCatCount();
+        latestCatalog();
+        getCatalog(catalogIndex);
     })
+    //获取分页数量
+    function getCatCount() {
+        $.post('http://192.168.0.109:3000/bookInfo/getCatCount', {bookId: bookId},
+            function (result) {
+                if (result.success) {
+                    var html = '';
+                    html+= '<option value="0" selected="selected">第1 - 20章</option>';
+                    var begin=0, end=0;
+                    catalogCount = result.data;
+                    for (var i = 1; i < parseInt(result.data); i++) {
+                        begin = i*20+1;
+                        end = i*20+20;
+                        html += '<option value='+i+'>第'+ begin +'-'+ end +'章</option>';
+                    }
+                    document.getElementById('selectIndex').innerHTML = html;
+                }
+            }
+        );
+    }
+    //获取最新章节
+    function latestCatalog() {
+        if(bookId==''){
+            alert('请求错误');
+            return;
+        }
+        $.post('http://192.168.0.109:3000/bookInfo/latestCatalog', {bookId: bookId},
+            function (result) {
+                if (result.success) {
+                    var html = '';
+                    for(var i = 0; i < result.data.length; i++){
+                        html += '<li><a href="/bookChapter/'+ result.data[i].bookId + '/'+ result.data[i].bookChapterId + '">'+ result.data[i].chapterTitle +'</a></li>';
+                    }
+                    document.getElementById('latestCatalog').innerHTML = html;
+                }
+            }
+        );
+        checkState(catalogIndex, catalogCount)
+    }
+    //获取章节目录
+    function getCatalog(pageIndex=0) {
+        pageIndex = $('#selectIndex').children('option:selected').val();
+        catalogIndex = pageIndex;
+        if(bookId==''){
+            alert('请求错误');
+            return;
+        }
+        $.post('http://192.168.0.109:3000/bookInfo/getCatalog', {bookId: bookId, catalogIndex: catalogIndex},
+            function (result) {
+                if (result.success) {
+                    var html = '';
+                    for(var i = 0; i < result.data.length; i++){
+                        html += '<li><a href="/bookChapter/'+ result.data[i].bookId + '/'+ result.data[i].bookChapterId + '">'+ result.data[i].chapterTitle +'</a></li>';
+                    }
+                    document.getElementById('catalog').innerHTML = html;
+                }
+            }
+        );
+        checkState(catalogIndex, catalogCount)
+    }
+
+    //上一页或下一页
+    function getPage(delta = 0){
+        var catIndex = parseInt(catalogIndex) + parseInt(delta);
+        // console.log(catIndex);
+        //如果查找目录页面超过范围
+        if(catIndex<0 || catIndex>=catalogCount){
+            return;
+        }
+        //跳转页面未超出范围则更改相应select选中项
+        $(".selectIndex").val(catIndex);
+        // $("#selectIndex option[value= 'data' ]").prop("selected",true);
+        getCatalog(catIndex);
+    }
+    //更新按钮状态
+    function checkState(pageIndex, pageCount) {
+        // 如果在首页且总共只有一页
+        if(pageIndex == 0 && pageIndex == pageCount-1){
+            $('.prevPage').prop('disabled',true);
+            $('.nextPage').prop('disabled',true);
+        }
+        // 如果在首页且总共有多页
+        else if(pageIndex == 0 && pageIndex < pageCount-1){
+            $('.prevPage').prop('disabled',true);
+            $('.nextPage').prop('disabled',false);
+        }
+        // 如果不在首页且不在尾页
+        else if(pageIndex > 0 && pageIndex < pageCount-1){
+            $('.prevPage').prop('disabled',false);
+            $('.nextPage').prop('disabled',false);
+        }
+        // 如果在尾页
+        else if(pageIndex > 0 && pageIndex == pageCount-1){
+            $('.prevPage').prop('disabled',false);
+            $('.nextPage').prop('disabled',true);
+        }
+    }
+
 </script>
 </body>
 </html>

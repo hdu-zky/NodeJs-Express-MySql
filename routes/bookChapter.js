@@ -43,14 +43,6 @@ exports.bookChapterHTML = function (req, res) {
 exports.getBookContent=function (req, res, next) {
     var chapterContentUrl = req.body.chapterContentUrl;
     console.log(chapterContentUrl);
-    // var connection = mysql.createConnection({
-    //     host:'localhost',
-    //     port:'3306',
-    //     user:'root',
-    //     password:'223412',//修改为自己的密码
-    //     database:'nodeexpress'//修改为自己的数据库
-    // });
-    // connection.connect();
     //从本地文件读取小说章节内容并返回到前端
     fs.readFile('F:\\nodejs\\express\\demo-1\\public'+ chapterContentUrl, 'utf8', function(err, data){
         if(err) throw err;
@@ -61,5 +53,4 @@ exports.getBookContent=function (req, res, next) {
                 bookContent: data
             });
     });
-    // connection.end();
 };

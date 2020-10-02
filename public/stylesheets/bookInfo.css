@@ -38,6 +38,45 @@ body {
     text-decoration-style: initial;
     text-decoration-color: initial;
 }
+.bookShelf ul{
+    list-style: none
+}
+.bookShelf li{
+    margin-top: 16px;
+}
+.bookInfo {
+    border: 0px;
+    height: 140px;
+    overflow: hidden;
+    line-height: 20px;
+    color: #000;
+    padding-left: 0px;
+}
+.bookInfo a {
+    text-decoration: none;
+    font-size: 16px;
+    color: #222;
+}
+.bookInfo h2{
+    font-size: 18px;
+    height: auto;
+    padding: 0px;
+    margin: 0px;
+    height: 34px;
+    line-height: 34px;
+}
+.bookInfo h2>button{
+    float: right;
+}
+.bookInfo p{
+    margin: 0px;
+    height: auto;
+    color: #888;
+    font-size: 14px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
 
 .block_txt {
     border: 0px;
@@ -57,6 +96,9 @@ body {
     height: auto;
     color: #888;
     font-size: 14px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 .block_txt a {
     text-decoration: none;
@@ -99,6 +141,7 @@ body {
 .intro_info {
     padding-left: 8px;
     font-size: 16px;
+    line-height: 1.5;
 }
 ul{
     padding-left: 0px;
@@ -125,7 +168,19 @@ chapter{
     color: #000;
     text-decoration: none;
 }
-
+.prevPage{
+    width: 26%;
+    margin-right: 2%;
+}
+.selectIndex{
+    height: 34px;
+    width: 40%;
+    margin-right: 2%;
+    border-radius: 5px;
+}
+.nextPage{
+    width: 26%;
+}
 .footer {
     height: 100px;
     background: #ECF0F0;
