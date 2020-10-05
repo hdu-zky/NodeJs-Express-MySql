@@ -1,0 +1,282 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>笔趣阁小说阅读</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <!--<link rel="stylesheet" href="bootstrap-3.3.7-dist/css/css/bootstrap.min.css">-->
+</head>
+<style>
+    .line {
+        border-bottom: 1px solid #efefef;
+        padding-bottom: 5px;
+        padding-top: 5px;
+        font-size: 16px;
+        font-family: "microsoft yahei";
+        color: #999;
+    }
+    .line>a {
+        color: #666;
+        text-decoration: none;
+    }
+    .line .blue {
+        color: #007BB1;
+        font-size: 18px;
+        margin-left: 1ex;
+    }
+    #bookList{
+        min-height: 360px;
+    }
+    .selectBtn{
+        width: 26%;
+    }
+    .selectIndex{
+        margin-left: 1%;
+        margin-right: 1%;
+    }
+    .selectIndex{
+        height: 34px;
+        width: 40%;
+        border-radius: 5px;
+    }
+    .intro {
+        border-bottom: 2px solid #65bbec;
+        background: #ECF0F0;
+        height: 35px;
+        line-height: 35px;
+        padding-left: 8px;
+        font-weight: bold;
+        font-size: 15px;
+        color: #000;
+        margin-top: 5px;
+    }
+</style>
+<body>
+<!--顶部导航栏-->
+<nav class="nav  nav-tabs navbar-inverse" role="navigation">
+    <div class="container-fluid">
+        <!--顶部左侧导航栏-->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#example-navbar-collapse">
+                <span class="sr-only">切换导航</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a  class="navbar-brand" href="/">笔趣阁手机版</a>
+        </div>
+        <!--顶部右侧导航-->
+        <div class="collapse navbar-collapse" id="example-navbar-collapse">
+            <ul class="nav navbar-nav">
+                <!--<li class="active"><a href="#">主页</a></li>-->
+                <!--<li><a href="#">信息</a></li>-->
+                <!--<li><a href="#">联系</a></li>-->
+            </ul>
+            <!--个人信息下拉框-->
+            <ul class="nav navbar-nav navbar-sub navbar-right">
+                <!--如果是已经登陆展示的样式-->
+                <% if (userInfo.uId) { %>
+                    <li class="nav navbar-nav dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="true">
+                            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                            欢迎，<%= userInfo.uName %><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">消息<span class="badge bg-warning">42</span></a></li>
+                            <li><a href="/user">个人信息</a></li>
+                            <li><a href="/logout">退出</a></li>
+                        </ul>
+                    </li>
+                    <!--如果还未登录展示的样式-->
+                <% }  else { %>
+                    <li><a href="/login">登入</a></li>
+                    <li><a href="/reg">注册</a></li>
+                <% } %>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<%include header.ejs%>
+<div class="container" style="margin-top: 15px">
+    <div class="row">
+        <div class="col-sm-12 col-xs-12">
+            <label class="control-label sr-only" for="searchBook">搜索框</label>
+            <div class="input-group form-group">
+                <input type="text" class="form-control" placeholder="输入书名/作者名查找" id="inputBook">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" id="searchBook" onclick="searchBook()">搜索</button>
+            </span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <ul class="col-sm-12">
+            <input class="btn btn-default col-sm-4 col-xs-4" type="button" value="最新更新" onclick="getTopList(1, 0)">
+            <input class="btn btn-default col-sm-4 col-xs-4" type="button" value="最新入库" onclick="getTopList(2, 0)">
+            <input class="btn btn-default col-sm-4 col-xs-4" type="button" value="完结全本" onclick="getTopList(3, 0)">
+        </ul>
+    </div>
+</div>
+
+<!--相应类型书籍列表-->
+<div class="container">
+    <div class="intro">排行榜</div>
+    <div class="row">
+        <ul class="col-sm-12" id="bookList">
+
+        </ul>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <!--<button  class="btn btn-primary selectBtn" id="firstPage">首页</button>-->
+            <button  class="btn btn-primary selectBtn" id="prevPage" onclick="getPage(-1)">上一页</button>
+            <select  class="selectIndex" id="selectIndex" onchange="getList()" style="color: #333333">
+            </select>
+            <button  class="btn btn-primary selectBtn" id="nextPage" onclick="getPage(1)">下一页</button>
+            <!--<button  class="btn btn-primary selectBtn" id="lastPage">尾页</button>-->
+            <!--<label>-->
+            <!--(第<span id="pageIndex"></span>/<span id="pageCount"></span>页)-->
+            <!--当前<span id="pageSize"></span>条/页-->
+            <!--</label>-->
+        </div>
+        <div class=" col-sm-12" style="margin-top: 15px">
+            <div class="input-group form-group">
+                <input type="text" class="form-control" placeholder="输入页数" id="searchPageIndex">
+                <span class="input-group-btn">
+                <button class="btn btn-default" type="button" onclick="jumpPage()">跳转</button>
+            </span>
+            </div>
+        </div>
+
+    </div>
+</div>
+<%- include footer %>
+<script>
+    var selectType = '<%= userInfo.typeId%>';
+    var pageIndex = 0;
+    var pageCount = '<%= userInfo.pageCount%>';
+    var finishCount = 0;
+    var httpUrl=[
+        'http://192.168.0.109:3000/bookState/getCount',
+        'http://192.168.0.109:3000/bookState/getTopList',
+    ];
+    // getCount(1);
+    getTopList(1, 0);
+    //获取分页数量rank
+    function getCount(selectType) {
+        $.post(httpUrl[0],{selectType: selectType},
+            function (result) {
+                if (result.success) {
+                    console.log('getcount');
+                    if(selectType ==3){
+                        finishCount = result.data;
+                    }else{
+                        pageCount= result.data;
+                    }
+                    console.log(selectType+' '+ pageCount+ ' '+result.data);
+                    var html = '';
+                    html+= '<option value="0" selected="selected">第 1/'+ result.data +' 页</option>';
+                    for (var i = 1; i < result.data; i++) {
+                        var index = parseInt(i)+1;
+                        html += '<option value='+i+'>第 '+ index +'/'+ result.data +' 页</option>';
+                    }
+                    document.getElementById('selectIndex').innerHTML = html;
+                }
+            }
+        );
+    }
+    //上一页或下一页
+    function getPage(delta = 0){
+        var index = parseInt(pageIndex) + parseInt(delta);
+        //如果查找目录页面超过范围
+        if(index<0 || index>=pageCount || index>=finishCount){
+            return;
+        }
+        //跳转页面未超出范围则更改相应select选中项
+        $(".selectIndex").val(index);
+        // $("#selectIndex option[value= 'data' ]").prop("selected",true);
+        getList();
+    }
+    //获取分页列表
+    function getList() {
+        var index = $('#selectIndex').children('option:selected').val();
+        if(index == pageIndex){
+            return;
+        }
+        getTopList(selectType, index);
+    }
+    // 获得总榜
+    function getTopList(type, index){
+        selectType = type;
+        pageIndex = index;
+        getCount(type);
+        console.log('getTopList');
+        console.log(pageIndex+ ' ' +pageCount);
+        switch (selectType) {
+            case '1': $('.intro').text('最新更新');break;
+            case '2': $('.intro').text('最新入库');break;
+            case '3': $('.intro').text('完本全本');break;
+            default: $('.intro').text('最新更新');break;
+        }
+        $.post(httpUrl[1],{selectType: selectType, pageIndex: pageIndex},
+            function (result) {
+                if (result.success) {
+                    var html = '';
+                    for(var i = 0; i < result.data.length; i++){
+                        html += '<p class="line">';
+                        html += '<span href="#">[' + result.data[i].bookTypeName + ']</span>';
+                        html += '<a href= "/bookInfo/' + result.data[i].bookId + '" class="blue">'+ result.data[i].bookName +'</a>/';
+                        html += '<a href="/author/' + result.data[i].authorId +'">'+ result.data[i].authorName + '</a>';
+                        if(selectType ==2){
+                            html += '<span style="float: right">' + result.data[i].createTime + '</span>';
+                        }else{
+                            html += '<span style="float: right">' + result.data[i].updateTime + '</span>';
+                        }
+                        html += '</p>';
+                    }
+                    document.getElementById('bookList').innerHTML = html;
+                }
+            }
+        );
+        checkState(index);
+    }
+    function checkState(pageIndex) {
+        var pageNum;
+        // 如果在首页且总共只有一页
+        if(selectType == 3){
+            pageNum = finishCount;
+        }else{
+            pageNum = pageCount;
+        }
+        if(pageIndex == 0 && pageIndex == pageNum-1){
+            $('#prevPage').prop('disabled',true);
+            $('#nextPage').prop('disabled',true);
+        }
+        // 如果在首页且总共有多页
+        else if(pageIndex == 0 && pageIndex < pageNum-1){
+            $('#prevPage').prop('disabled',true);
+            $('#nextPage').prop('disabled',false);
+        }
+        // 如果不在首页且不在尾页
+        else if(pageIndex > 0 && pageIndex < pageNum-1){
+            $('#prevPage').prop('disabled',false);
+            $('#nextPage').prop('disabled',false);
+        }
+        // 如果在尾页
+        else if(pageIndex > 0 && pageIndex == pageNum-1){
+            $('#prevPage').prop('disabled',false);
+            $('#nextPage').prop('disabled',true);
+        }
+    }
+</script>
+</body>
+</html>

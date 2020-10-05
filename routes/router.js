@@ -7,6 +7,8 @@ var user = require('../routes/users');
 var login = require('../routes/login');
 var reg = require('../routes/reg');
 var sort = require('../routes/sort');
+var rank = require('../routes/rank');
+var bookState = require('../routes/bookState');
 var bookInfo = require('../routes/bookInfo');
 var bookShelf = require('../routes/bookShelf');
 var bookChapter = require('../routes/bookChapter');
@@ -28,6 +30,7 @@ var upload = multer({
 
 /* login */
 router.get('/', home.home);
+router.post('/home/recommend', home.recommend);
 router.get('/index', index.index);
 // router.get('/favicon.ico', home.favicon);
 
@@ -52,13 +55,24 @@ router.get('/sort', sort.rootHTML);
 router.post('/sort', sort.getSortBook);
 router.post('/searchBook', sort.searchBook);
 
+router.get('/rank/:id', rank.getBookRank);
+router.post('/rank/getTopList', rank.getTopList);
+router.post('/rank/getCount', rank.getCount);
+
+router.get('/bookState/:id', bookState.getBookState);
+router.post('/bookState/getCount', bookState.getCount);
+router.post('/bookState/getTopList', bookState.getTopList);
+
 router.get('/bookInfo/:id', bookInfo.bookInfoHTML);
 router.post('/bookInfo/getCatalog', bookInfo.getCatalog);
 router.post('/bookInfo/getCatCount', bookInfo.getCatCount);
 router.post('/bookInfo/latestCatalog', bookInfo.latestCatalog);
+router.post('/bookInfo/checkShelf', bookInfo.checkShelf);
+router.post('/bookInfo/addToShelf', bookInfo.addToShelf);
+router.post('/getDownload', bookInfo.getDownload);
 
 router.get('/bookShelf', bookShelf.bookShelfHTML);
-router.post('/deleteBook', bookShelf.deleteBook);
+router.post('/bookShelf/removeBook', bookShelf.removeBook);
 
 router.get('/bookChapter/:bookId/:textId', bookChapter.bookChapterHTML);
 router.post('/bookChapter/getBookContent', bookChapter.getBookContent);

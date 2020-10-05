@@ -105,24 +105,19 @@ body {
     font-size: 16px;
     color: #222;
 }
-.ablum_read {
+.options {
     height: auto;
     padding: 5px 0px 5px 0px;
     overflow: hidden;
 }
-.ablum_read span {
-    background: #65bbec;
-    border-radius: 3px;
-    height: 40px;
-    line-height: 40px;
-    text-align: center;
+.options button {
     width: 49%;
     float: left;
 }
-.margin_right {
+.btnDwd {
     margin-right: 2%;
 }
-.ablum_read span a {
+.options span a {
     color: #fff;
     display: block;
     text-decoration: none;
@@ -180,6 +175,15 @@ chapter{
 }
 .nextPage{
     width: 26%;
+}
+.bookShelf{
+    padding-left: 15px;
+    padding-right: 15px;
+}
+.bookImg{
+    display: inline-block;
+    float: left;
+    margin-right: 8px;
 }
 .footer {
     height: 100px;

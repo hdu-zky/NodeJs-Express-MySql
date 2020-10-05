@@ -53,14 +53,7 @@
     </div>
 </nav>
 
-<div class="header">
-    <ul class="">
-        <li class="col-sm-3 col-xs-3"><a href="/sort" class="active">分类</a></li>
-        <li class="col-sm-3 col-xs-3"><a href="#">排行</a></li>
-        <li class="col-sm-3 col-xs-3"><a href="#">全本</a></li>
-        <li class="col-sm-3 col-xs-3"><a href="/bookShelf">书架</a></li>
-    </ul>
-</div>
+<%include header.ejs%>
 <div class="container" style="margin-top: 15px">
     <div class="row">
         <div class="col-sm-12 col-xs-12">
@@ -85,7 +78,7 @@
                 <p>作者：<a href='/author/<%= bookData.authorName %>'><%= bookData.authorName %></a></p>
                 <p>分类：<%= bookData.bookTypeName %></p>
                 <p>状态：<% if (bookData.status == 1) { %>连载中<% }else { %>已完结<% } %></p>
-                <p>更新：<%= bookData.updateTime %></p>
+                <p>更新：<span class="updateTime"></span></p>
                 <p>最新：<a href="/bookChapter/<%= bookData.bookId %>/<%= bookData.latestChapter %>">
                         <%= bookData.latestChTitle %></a></p>
             </div>
@@ -93,9 +86,9 @@
     </div>
     <div class="row">
         <div class="col-sm-12 col-xs-12">
-        <div class="ablum_read">
-            <span class="margin_right"><a href="javascript:download('校园修仙');">合集下载</a></span>
-            <span><a href="/wapbook-673/">加入书架</a></span>
+        <div class="options">
+            <button type="button" class="btn btn-primary btnDwd" onclick="getDownload()">合集下载</button>
+            <button type="button" class="btn btn-primary" onclick="addToShelf()" id="addToShelf">加入书架</button>
         </div>
         </div>
     </div>
@@ -120,26 +113,91 @@
     </div>
 
 </div>
-<div class="footer" style="margin-top: 60px">
-    <ul>
-        <li><a href="/">首页</a></li>
-        <li><a href="/">友情链接</a></li>
-        <li><a href="/home/">书架</a></li>
-        <li><a href="/" style="color:red">意见反馈</a></li>
-    </ul>
-</div>
+<%include footer.ejs%>
 <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script>
     const bookId = '<%= bookData.bookId %>';
     var catalogCount = '<%= bookData.pageCount %>';
+    var userId = '<%= bookData.uId%>';
+    var filename = '<%= bookData.bookName %>';
+    var time = '<%= bookData.updateTime %>';
     //当前目录页面序号
     var catalogIndex=0;
     $(function () {
+        var dateTime = formateDate(time);
+        // dateTime.format('yyyy-MM-dd HH:mm:ss');
+        $('.updateTime').text(dateTime);
+        checkShelf();
         getCatCount();
         latestCatalog();
         getCatalog(catalogIndex);
     })
+    function formateDate(date) {
+        var date = new Date(date);
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        var d = date.getDate();
+        var h = date.getHours();
+        var mi = date.getMinutes();
+        var sec = date.getSeconds();
+        m = m > 9 ? m : '0' + m;
+        d = d > 9 ? d : '0' + d;
+        h = h > 9 ? h : '0' + h;
+        mi = mi > 9 ? mi : '0' + mi;
+        sec = sec > 9 ? sec : '0' + sec;
+        return y + '-' + m + '-' + d + ' ' + h + ':' + mi + ':'+sec;
+    }
+    //下载本书电子合集
+    function getDownload() {
+        var params = {filename: filename, bookId: bookId};
+        postExcelFile(params, "http://192.168.0.109:3000/getDownload");
+    }
+    function postExcelFile(params, url) { //params是post请求需要的参数，url是请求url地址
+        var form = document.createElement("form");
+        form.style.display = 'none';
+        form.action = url;
+        form.method = "post";
+        // form.enctype = "multipart/form-data";
+        document.body.appendChild(form);
+
+        for(var key in params){
+            var input = document.createElement("input");
+            input.type = "hidden";
+            input.name = key;
+            input.value = params[key];
+            form.appendChild(input);
+        }
+        form.submit();
+        form.remove();
+    }
+
+    // 检查本书是否已在书架中
+    function checkShelf() {
+        $.post('http://192.168.0.109:3000/bookInfo/checkShelf', {userId: userId, bookId: bookId},
+            function (result) {
+                if (result.success) {
+                    $('#addToShelf').text('已在书架中');
+                    $('#addToShelf').prop('disabled', 'disabled');
+                    return;
+                }
+            });
+    }
+    //添加本书到书架
+    function addToShelf(){
+        $('#addToShelf').prop('disabled', true);
+        $.post('http://192.168.0.109:3000/bookInfo/addToShelf', {userId: userId, bookId: bookId},
+            function (result) {
+                if (result.success) {
+                    alert("添加成功");
+                    $('#addToShelf').text('已在书架中');
+                    $('#addToShelf').prop('disabled', 'disabled');
+                }else{
+                    alert(result.msg);
+                }
+            })
+        $('#addToShelf').prop('disabled', false);
+    }
     //获取分页数量
     function getCatCount() {
         $.post('http://192.168.0.109:3000/bookInfo/getCatCount', {bookId: bookId},
@@ -172,6 +230,8 @@
                     for(var i = 0; i < result.data.length; i++){
                         html += '<li><a href="/bookChapter/'+ result.data[i].bookId + '/'+ result.data[i].bookChapterId + '">'+ result.data[i].chapterTitle +'</a></li>';
                     }
+                    //存储最新章节id到本地
+                    localStorage.setItem('latestChapterId', result.data[0].bookChapterId);
                     document.getElementById('latestCatalog').innerHTML = html;
                 }
             }

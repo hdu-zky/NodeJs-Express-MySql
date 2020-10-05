@@ -1,6 +1,8 @@
 var express = require('express');
 var mysql = require('mysql');
 var mysqlConnect = require('./mysqlConnect');
+var fs = require("fs");
+var path = require('path');
 
 // 处理请求返回分类页面
 exports.bookInfoHTML = function (req, res) {
@@ -30,11 +32,7 @@ exports.bookInfoHTML = function (req, res) {
         connection.query(query,function(err, rest){
             if (err) throw err;
             //如果检索到数据
-            // console.log(result);
             pageCount = (rest[0].count%20)==0? (rest[0].count/20):((rest[0].count-rest[0].count%20)/20+1);
-            // console.log(pageCount);
-            // res.send({success: true, data: pageCount});
-            // connection.end();
             res.render('bookInfo',
                 bookData={ //第二个参数分配模板
                     uId: req.session.user,
@@ -55,6 +53,53 @@ exports.bookInfoHTML = function (req, res) {
         });
         // connection.end();
     });
+};
+exports.getDownload = function(req, res, next) {
+    var filename = req.body.filename;
+    var bookId = req.body.bookId;
+    var __dirname = 'F:\\nodejs\\express\\demo-1';
+    var file = __dirname+'\\public\\booktxt\\'+bookId+"\\" + filename+".txt";
+    console.log(file);
+    res.download(file, filename+'.txt', function (err) {
+        if(err){
+            console.log(err)
+        }else{
+            //res.send('ok')
+        }
+    })
+};
+
+// 检查书是否已在书架
+exports.checkShelf = function(req, res, next) {
+    var userId = req.body.userId;
+    var bookId = req.body.bookId;
+    var check = "select id from bookshelf where userId='"+ userId +"' and bookId= '"+ bookId +"' ";
+    mysqlConnect.mysqlConnect(check,{}, function(err, result){
+        if (err) {
+            throw err;
+        }else{
+            //如果检索到数据
+            // console.log(result);
+            if(result.length>0){
+                res.send({success: true});
+            }else{
+                res.send({success: false});
+            }
+        }
+    })
+};
+// 添加书到书架
+exports.addToShelf = function(req, res, next) {
+    var userId = req.body.userId;
+    var bookId = req.body.bookId;
+    var query = "INSERT INTO bookshelf (userId, bookId) VALUES ('"+ userId +"', '"+ bookId +"')";
+    mysqlConnect.mysqlConnect(query,{}, function(err, result){
+        if (err) {
+            throw err;
+        }else{
+            res.send({success: true});
+        }
+    })
 };
 //查找目录
 exports.getCatalog=function (req, res, next) {

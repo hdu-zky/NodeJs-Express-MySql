@@ -14,33 +14,121 @@
     #content{
         font-size: 18px;
     }
+    .selectPage{
+        margin-top: 60px;
+    }
+    .prevPage{
+        width: 26%;
+        margin-right: 2%;
+    }
+    .backPage{
+        height: 34px;
+        width: 40%;
+        margin-right: 2%;
+        border-radius: 5px;
+    }
+    .nextPage{
+        width: 26%;
+    }
+    .footer {
+         height: 100px;
+         background: #ECF0F0;
+         padding: 3px 0 0;
+         border-top: 1px solid #f1f1f1;
+         text-align: center;
+         position: relative;
+         z-index: 999;
+     }
+    .footer ul {
+        padding: 10px 0px 0px 0px;
+        margin: 0px;
+        clear: both;
+        height: 30px;
+    }
+    .footer li {
+        float: left;
+        text-align: center;
+        width: 25%;
+        font-size: 16px;
+        padding: 0px;list-style: none;
+    }
 </style>
 <body>
 <div class="container">
-    <h3 class="text-center"><%= bookTxt.chapterTitle %></h3>
+    <h3 class="text-center title"><%= bookTxt.chapterTitle %></h3>
     <div id="content"></div>
+    <div class="row selectPage">
+        <div class="col-sm-12 col-xs-12">
+            <button type="button" class="btn btn-primary prevPage" onclick="getPage(-1)">上一章</button>
+            <!--<button type="button" class="btn btn-primary backPage" onclick="getPage(-1)">回目录</button>-->
+            <a class="btn btn-primary backPage" href="/bookInfo/<%= bookTxt.bookId%>" role="button">回目录</a>
+            <button type="button" class="btn btn-primary nextPage" onclick="getPage(1)">下一章</button>
+        </div>
+    </div>
 </div>
-
-<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
-<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<%- include footer.ejs %>
 <script>
-    $(function () {
-        var success = '<%= bookTxt.success %>'
+    //获取最新章节号
+    var maxChapterNum = parseInt(localStorage.getItem('latestChapterId'));
+    //获取当前章节号
+    var bookId = '<%= bookTxt.bookId%>';
+    var chapterId = parseInt('<%= bookTxt.bookChapterId%>');
+    var chapterContentUrl = '<%= bookTxt.chapterContentUrl%>';
+    var success = '<%= bookTxt.success %>';
+    checkState();
+    chapterContent();
+    //获取该章节内容并以HTML格式展示
+    function chapterContent () {
         if(success != '200'){
             return;
         }
-        var chapterContentUrl = '<%= bookTxt.chapterContentUrl %>'
         console.log(chapterContentUrl);
         $.post('http://192.168.0.109:3000/bookChapter/getBookContent', {chapterContentUrl: chapterContentUrl},
             function (result) {
                 if (result.success) {
-                    var html = result.bookContent;
-                    console.log(result.bookContent);
+                    var tmp = result.bookContent;
+                    var html='';
+                    html += '<p>'+tmp;
+                    // html = html.replaceWith('\n', '</p><p>');
+                    // html = html.replaceAll('\n', '</p><p>');
+                    // 文本的换行替换成p标签
+                    html = html.replace(new RegExp('\n','g'), '</p><p>');
+                    html += '</p>';
+                    document.getElementById('content').innerHTML += '<p>&nbsp;&nbsp;&nbsp;&nbsp;';
                     document.getElementById('content').innerHTML = html;
                 }
             }
         )
-    });
+    };
+    function getPage(delta=1){
+        chapterId += delta;
+        // var newId = parseInt(chapterId)+delta;
+        console.log(chapterId);
+        location.href = '/bookChapter/'+bookId+'/'+chapterId;
+    }
+    //更新按钮状态
+    function checkState() {
+        // 如果在首页且总共只有一页
+        if(chapterId == 1 && chapterId == maxChapterNum){
+            $('.prevPage').prop('disabled',true);
+            $('.nextPage').prop('disabled',true);
+        }
+        // 如果在首页且总共有多页
+        else if(chapterId == 1 && chapterId < maxChapterNum){
+            $('.prevPage').prop('disabled',true);
+            $('.nextPage').prop('disabled',false);
+        }
+        // 如果不在首页且不在尾页
+        else if(chapterId > 1 && chapterId < maxChapterNum){
+            $('.prevPage').prop('disabled',false);
+            $('.nextPage').prop('disabled',false);
+        }
+        // 如果在尾页
+        else if(chapterId > 1 && chapterId == maxChapterNum){
+            $('.prevPage').prop('disabled',false);
+            $('.nextPage').prop('disabled',true);
+        }
+    }
 </script>
 </body>
 </html>

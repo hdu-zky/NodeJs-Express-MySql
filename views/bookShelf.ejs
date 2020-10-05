@@ -28,14 +28,8 @@
     </div>
 </nav>
 
-<div class="header">
-    <ul class="">
-        <li class="col-sm-3 col-xs-3"><a href="/sort" class="active">分类</a></li>
-        <li class="col-sm-3 col-xs-3"><a href="#">排行</a></li>
-        <li class="col-sm-3 col-xs-3"><a href="#">全本</a></li>
-        <li class="col-sm-3 col-xs-3"><a href="/bookShelf">书架</a></li>
-    </ul>
-</div>
+<%include header.ejs%>
+
 <div class="container" style="margin-top: 15px">
     <div class="row">
         <div class="col-sm-12 col-xs-12">
@@ -52,42 +46,69 @@
 <div class="container">
 <div class="intro">你的书架</div>
     <div class="bookShelf">
+    <!--用户书架列表展示-->
     <ul>
         <% bookArray.result.forEach(function(bookData){%>
-        <li class="row">
-            <div class="col-sm-4 col-xs-4 col-md-2 col-lg-2">
-                <img class="img-thumbnail" alt="封面" id="bookImg" src='<%= bookData.bookImg %>' style="width: 120px; height: 134px;">
+        <li class="row" id="book-<%= bookData.bookId %>">
+            <div class="bookImg">
+                <a href="/bookInfo/<%= bookData.bookId %>">
+                    <img class="img-thumbnail" alt="封面" id="bookImg" src='<%= bookData.bookImg %>' width=110px height=140px>
+                </a>
             </div>
-            <div class="col-sm-8 col-xs-8 col-md-10  col-lg-10 bookInfo">
+            <div class="bookInfo">
                 <h2><a href='/bookInfo/<%= bookData.bookId %>'><%= bookData.bookName %></a>
-                    <button type="button" class="btn btn-danger" onclick="deleteBook()">移除本书</button>
+                    <button type="button" class="btn btn-danger" onclick="deleteBook(<%= bookData.bookId %>)">移除本书</button>
                 </h2>
                 <p>作者：<a href='/author/<%= bookData.authorName %>'><%= bookData.authorName %></a></p>
                 <p>分类：<%= bookData.bookTypeName %></p>
                 <p>状态：<% if (bookData.status == 1) { %>连载中<% }else { %>已完结<% } %></p>
-                <p>更新：<%= bookData.updateTime %></p>
+                <p>更新：<%= bookData.updateTime%></p>
                 <p>最新：<a href="/bookChapter/<%= bookData.bookId %>/<%= bookData.latestChapter %>">
                         <%= bookData.latestChTitle %></a></p>
             </div>
         </li>
         <% }) %>
-
     </ul>
 </div>
 </div>
-<div class="footer" style="margin-top: 60px">
-    <ul>
-        <li><a href="/">首页</a></li>
-        <li><a href="/">友情链接</a></li>
-        <li><a href="/home/">书架</a></li>
-        <li><a href="/" style="color:red">意见反馈</a></li>
-    </ul>
-</div>
-<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
-<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<%- include footer.ejs %>
 <script>
-    function deleteBook(){
-
+    function formateDate(date) {
+        var date = new Date(date);
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        var d = date.getDate();
+        var h = date.getHours();
+        var mi = date.getMinutes();
+        var sec = date.getSeconds();
+        m = m > 9 ? m : '0' + m;
+        alert("y:"+y+"m:"+m+"d:"+d+"h:"+h+"mi:"+mi);
+        return y + '-' + m + '-' + d + ' ' + h + ':' + mi + ':'+sec;
+    }
+    //删除书籍
+    function deleteBook(bookId){
+        const userId = '<%=bookArray.userId%>';
+        console.log(userId);
+        console.log(bookId);
+        if(userId == '' || bookId == ''){
+            alert("用户名或书号不存在");
+            return;
+        }
+        const con = confirm( "确定删除该书么" ); //在页面上弹出确认对话框
+        if (con== false )return;
+        $('.btn').prop('disabled', true);
+        $.post('http://192.168.0.109:3000/bookShelf/removeBook', {userId: userId, bookId: bookId},
+            function (result) {
+                if (result.success) {
+                    //移除HTML节点
+                    $("#book-"+bookId).remove();
+                    console.log("#book-"+bookId);
+                    alert("移除成功");
+                }else{
+                    alert(result.msg);
+                }
+            });
+        $('.btn').prop('disabled', false);
     }
 </script>
 </body>
