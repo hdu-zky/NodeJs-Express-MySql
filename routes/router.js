@@ -12,6 +12,7 @@ var bookState = require('../routes/bookState');
 var bookInfo = require('../routes/bookInfo');
 var bookShelf = require('../routes/bookShelf');
 var bookChapter = require('../routes/bookChapter');
+var bookSearch = require('../routes/bookSearch');
 var storage = multer.diskStorage({
     //设置上传后文件路径，uploads文件夹需要手动创建！！！
     destination: function (req, file, cb) {
@@ -70,6 +71,10 @@ router.post('/bookInfo/latestCatalog', bookInfo.latestCatalog);
 router.post('/bookInfo/checkShelf', bookInfo.checkShelf);
 router.post('/bookInfo/addToShelf', bookInfo.addToShelf);
 router.post('/getDownload', bookInfo.getDownload);
+
+router.get('/search/:keyWord', bookSearch.getSearch);
+router.get('/author/:keyWord', bookSearch.getSearchAuthor);
+router.post('/search', bookSearch.searchBook);
 
 router.get('/bookShelf', bookShelf.bookShelfHTML);
 router.post('/bookShelf/removeBook', bookShelf.removeBook);

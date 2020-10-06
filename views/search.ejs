@@ -1,0 +1,24 @@
+
+<div class="container" style="margin-top: 15px">
+    <div class="row">
+        <div class="col-sm-12 col-xs-12">
+            <label class="control-label sr-only" for="searchBook">搜索框</label>
+            <div class="input-group form-group">
+                <input type="text" class="form-control" placeholder="输入书名/作者名查找" id="inputBook">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" id="searchBook" onclick="searchBook()">搜索</button>
+            </span>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    // 搜索书
+    function searchBook() {
+        $('#searchBook').prop('disabled', true);
+        var keyWord = $('#inputBook').val();
+        window.location.href = '/search/'+keyWord;
+        $('#searchBook').prop('disabled', false);
+        checkState(pIndex, pageCount);
+    }
+</script>

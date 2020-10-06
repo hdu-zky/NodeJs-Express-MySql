@@ -10,6 +10,55 @@
         #bookVisit, #bookCollect, #bookNew, #bookUpdate{
             min-height: 360px;
         }
+        .bookInfo{
+            display: block;
+            height: 120px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        .bookImg{
+            display: inline-block;
+            float: left;
+        }
+        .bookImg>img{
+            width: 110px;
+            height: 120px;
+        }
+        .block_txt {
+            width: calc(100% - 120px);
+            height: 120px;
+            display: inline-block;
+            margin-left: 10px;
+            border: 0px;
+            overflow: hidden;
+            line-height: 20px;
+            color: #000;
+            padding-left: 0px;
+        }
+        .block_txt h2{
+            font-size: 18px;
+            height: auto;
+        }
+
+        .block_txt p{
+            margin: 0px;
+            height: auto;
+            color: #888;
+            font-size: 14px;
+            overflow: hidden;
+            /*white-space: nowrap;*/
+            text-overflow: ellipsis;
+        }
+        .bookIntro{
+            height: 60px;
+            word-wrap:break-word;
+            word-break:break-all;
+        }
+        .block_txt a {
+            text-decoration: none;
+            font-size: 16px;
+            color: #222;
+        }
         .line {
             border-bottom: 1px solid #efefef;
             padding-bottom: 5px;
@@ -90,20 +139,7 @@
 </nav>
 
 <%include header.ejs%>
-
-<div class="container" style="margin-top: 15px">
-    <div class="row">
-        <div class="col-sm-12 col-xs-12">
-            <label class="control-label sr-only" for="searchBook">搜索框</label>
-            <div class="input-group form-group">
-                <input type="text" class="form-control" placeholder="输入书名/作者名查找" id="inputBook">
-                <span class="input-group-btn">
-                    <button class="btn btn-default" type="button" id="searchBook" onclick="searchBook()">搜索</button>
-            </span>
-            </div>
-        </div>
-    </div>
-</div>
+<%include search.ejs%>
 <!--相应类型书籍列表-->
 <div class="container">
     <div class="intro"><span>点击排行</span><a href="/rank/1" style="float: right">更多>>></a></div>
@@ -160,7 +196,16 @@
                 if (result.success) {
                     var html = '';
                     console.log(result.data);
-                    for(var i = 0; i < result.data.length; i++){
+                    console.log(result.data[0].bookImg);
+                    html += '<div class="bookInfo">'
+                    html += '<div class="bookImg"><img class="img-thumbnail" alt="封面" id="bookImg" src=/images/bookImg/'+result.data[0].bookId+'.jpg></div>';
+                    html += '<div class="block_txt">' +
+                        '<p><a href="/bookInfo/'+ result.data[0].bookId +'">'+ result.data[0].bookName +'</a></p>' +
+                        '<p>作者：<a href="/author/'+ result.data[0].authorName +'">'+result.data[0].authorName+'</a></p>' +
+                        '<p>分类：'+ result.data[0].bookTypeName+ '</p>' +
+                        '<p class="bookIntro">简介：'+ result.data[0].Introduction+ '</p>' +
+                        '</div></div>';
+                    for(var i = 1; i < result.data.length; i++){
                         html += '<p class="line">';
                         html += '<span href="#">[' + result.data[i].bookTypeName + ']</span>';
                         html += '<a href= "/bookInfo/' + result.data[i].bookId + '" class="blue">'+ result.data[i].bookName +'</a>/';
