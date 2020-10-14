@@ -11,33 +11,108 @@ html{
     font-family: "microsoft yahei";
 }
 body {
-    background: #fff;
-    color: #999;
+    background: #f8f8f8;
+    /*color: #999;*/
 }
 .header ul{
     width: 100%;
-    height: 35px;
-    line-height: 35px;
+    height: 53px;
+    line-height: 53px;
     overflow: hidden;
-    padding: 0px;
-    float: left;
     background-color: #ECF0F0;
-    /*list-style-type: disc;*/
 }
 .header ul>li{
+    width: 20%;
+    height: 53px;
+    line-height: 53px;
     float: left;position: relative;
     display: block;
     text-align: center;
 }
+.header ul li:hover{
+    border-bottom: 3px solid #65bbec;
+}
+.header ul li.active{
+    border-bottom: 3px solid #65bbec;
+}
 .header ul>li>a {
+    display : block;
     color: #000;
+    height: 50px;
     font-size: 16px;
     font-family: "microsoft yahei";
     text-decoration: none;
-    text-decoration-line: none;
-    text-decoration-style: initial;
-    text-decoration-color: initial;
 }
+#bookVisit_homePage, #bookCollect_homePage, #bookNew_homePage, #bookUpdate_homePage{
+    min-height: 360px;
+}
+.bookInfo_homePage{
+    display: block;
+    height: 120px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.bookImg_homePage{
+    display: inline-block;
+    float: left;
+}
+.bookImg_homePage>img{
+    width: 110px;
+    height: 120px;
+}
+.bookDetail_homePage {
+    width: calc(100% - 120px);
+    height: 120px;
+    display: inline-block;
+    margin-left: 10px;
+    border: 0px;
+    overflow: hidden;
+    line-height: 20px;
+    color: #000;
+    padding-left: 0px;
+}
+.bookDetail_homePage h2{
+    font-size: 18px;
+    height: auto;
+}
+
+.bookDetail_homePage p{
+    margin: 0px;
+    height: auto;
+    color: #888;
+    font-size: 14px;
+    overflow: hidden;
+    /*white-space: nowrap;*/
+    text-overflow: ellipsis;
+}
+.bookIntro_homePage{
+    height: 60px;
+    word-wrap:break-word;
+    word-break:break-all;
+}
+.bookIntro_homePage a {
+    text-decoration: none;
+    font-size: 16px;
+    color: #222;
+}
+.line {
+    border-bottom: 1px solid #efefef;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    font-size: 16px;
+    font-family: "microsoft yahei";
+    color: #999;
+}
+.line>a {
+    color: #666;
+    text-decoration: none;
+}
+.blue{
+    color: #007BB1;
+    font-size: 18px;
+    margin-left: 1ex;
+}
+
 .bookShelf ul{
     list-style: none
 }
@@ -127,7 +202,7 @@ body {
     padding: 5px 0px 5px 0px;
     overflow: hidden;
 }
-.options button {
+.options>.btn {
     width: 49%;
     float: left;
 }
@@ -138,6 +213,12 @@ body {
     color: #fff;
     display: block;
     text-decoration: none;
+}
+#bookList{
+    min-height: 360px;
+}
+.selectBtn{
+    width: 26%;
 }
 .intro {
     border-bottom: 2px solid #65bbec;
@@ -180,6 +261,15 @@ chapter{
     color: #000;
     text-decoration: none;
 }
+.selectPage{
+    margin-top: 60px;
+}
+.backPage{
+    height: 34px;
+    width: 40%;
+    margin-right: 2%;
+    border-radius: 5px;
+}
 .prevPage{
     width: 26%;
     margin-right: 2%;
@@ -187,7 +277,8 @@ chapter{
 .selectIndex{
     height: 34px;
     width: 40%;
-    margin-right: 2%;
+    margin-left: 1%;
+    margin-right: 1%;
     border-radius: 5px;
 }
 .nextPage{
@@ -206,6 +297,7 @@ chapter{
     height: 100px;
     background: #ECF0F0;
     padding: 3px 0 0;
+    margin-top: 60px;
     border-top: 1px solid #f1f1f1;
     text-align: center;
     position: relative;

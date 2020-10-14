@@ -1,4 +1,4 @@
-var mysqlConnect = require('./mysqlConnect');
+var sqlExecute = require('./sqlExecute');
 
 exports.bookShelfHTML = function (req, res) {
     var userId = req.session.user;
@@ -6,7 +6,7 @@ exports.bookShelfHTML = function (req, res) {
         " bookinfo.updateTime, bookinfo.status, bookinfo.latestChapter, bookinfo.latestChTitle" +
         " from bookshelf inner join bookinfo where bookshelf.bookId = bookinfo.bookId " +
         " and bookshelf.userId  ='"+ userId +"'" ;
-    mysqlConnect.mysqlConnect(query,{}, function(err, result){
+    sqlExecute.mysqlConnect(query, function(err, result){
         if (err) throw err;
         //如果检索到数据
         for(let i=0; i< result.length; i++){
@@ -36,7 +36,7 @@ exports.removeBook=function (req, res, next) {
     var userId = req.body.userId;
     var bookId = req.body.bookId;
     var query = "delete from bookshelf where userId='"+ userId +"' and bookId= '"+ bookId +"' ";
-    mysqlConnect.mysqlConnect(query,{}, function(err, result){
+    sqlExecute.mysqlConnect(query, function(err, result){
         if (err) {
             throw err;
         }else{

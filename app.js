@@ -38,7 +38,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 /* 中间件,判断用户是否登录 */
 app.use(function (req, res, next) {
-    if (req.url != '/login' && req.url!='/reg' && req.url!='/userName' && req.session.user === undefined) {
+    if ((req.url !== '/login'  && req.session.user === undefined) && req.url!=='/reg'&& req.url!=='/sendEmail'
+        && req.url!=='/userName'&& req.url!=='/userEmail'&& req.url!=='/userPhone') {
         res.redirect('/login');
         return;
     }
@@ -49,9 +50,6 @@ app.use(function (req, res, next) {
     next();
 });
 app.use('/', router);
-// app.use('/login', loginRouter);
-// app.use('/users', usersRouter);
-// app.use('/reg', regRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

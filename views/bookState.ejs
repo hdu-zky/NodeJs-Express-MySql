@@ -5,107 +5,26 @@
     <title>笔趣阁小说阅读</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-    <!--<link rel="stylesheet" href="bootstrap-3.3.7-dist/css/css/bootstrap.min.css">-->
+    <link rel="stylesheet" href="/stylesheets/common.css">
 </head>
-<style>
-    .line {
-        border-bottom: 1px solid #efefef;
-        padding-bottom: 5px;
-        padding-top: 5px;
-        font-size: 16px;
-        font-family: "microsoft yahei";
-        color: #999;
-    }
-    .line>a {
-        color: #666;
-        text-decoration: none;
-    }
-    .line .blue {
-        color: #007BB1;
-        font-size: 18px;
-        margin-left: 1ex;
-    }
-    #bookList{
-        min-height: 360px;
-    }
-    .selectBtn{
-        width: 26%;
-    }
-    .selectIndex{
-        margin-left: 1%;
-        margin-right: 1%;
-    }
-    .selectIndex{
-        height: 34px;
-        width: 40%;
-        border-radius: 5px;
-    }
-    .intro {
-        border-bottom: 2px solid #65bbec;
-        background: #ECF0F0;
-        height: 35px;
-        line-height: 35px;
-        padding-left: 8px;
-        font-weight: bold;
-        font-size: 15px;
-        color: #000;
-        margin-top: 5px;
-    }
-</style>
 <body>
-<!--顶部导航栏-->
-<nav class="nav  nav-tabs navbar-inverse" role="navigation">
-    <div class="container-fluid">
-        <!--顶部左侧导航栏-->
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse"
-                    data-target="#example-navbar-collapse">
-                <span class="sr-only">切换导航</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a  class="navbar-brand" href="/">笔趣阁手机版</a>
-        </div>
-        <!--顶部右侧导航-->
-        <div class="collapse navbar-collapse" id="example-navbar-collapse">
-            <ul class="nav navbar-nav">
-                <!--<li class="active"><a href="#">主页</a></li>-->
-                <!--<li><a href="#">信息</a></li>-->
-                <!--<li><a href="#">联系</a></li>-->
-            </ul>
-            <!--个人信息下拉框-->
-            <ul class="nav navbar-nav navbar-sub navbar-right">
-                <!--如果是已经登陆展示的样式-->
-                <% if (userInfo.uId) { %>
-                    <li class="nav navbar-nav dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                           aria-expanded="true">
-                            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                            欢迎，<%= userInfo.uName %><span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">消息<span class="badge bg-warning">42</span></a></li>
-                            <li><a href="/user">个人信息</a></li>
-                            <li><a href="/logout">退出</a></li>
-                        </ul>
-                    </li>
-                    <!--如果还未登录展示的样式-->
-                <% }  else { %>
-                    <li><a href="/login">登入</a></li>
-                    <li><a href="/reg">注册</a></li>
-                <% } %>
-            </ul>
-        </div>
-    </div>
-</nav>
+<% include component/topNavbar.ejs%>
 
-<%include header.ejs%>
-<%include search.ejs%>
+<!--导航栏-->
+<div class="header">
+    <ul>
+        <li><a href="/">首页</a></li>
+        <li><a href="/bookSort">分类</a></li>
+        <li><a href="/bookRank/1">排行</a></li>
+        <li class="active"><a href="/bookState/1">全本</a></li>
+        <li><a href="/bookShelf">书架</a></li>
+    </ul>
+</div>
+<%include component/search.ejs%>
 <div class="container">
-    <div class="row">
+    <div class="row stateType">
         <ul class="col-sm-12">
-            <input class="btn btn-default col-sm-4 col-xs-4" type="button" value="最新更新" onclick="getTopList(1, 0)">
+            <input class="btn btn-default col-sm-4 col-xs-4 active" type="button" value="最新更新" onclick="getTopList(1, 0)">
             <input class="btn btn-default col-sm-4 col-xs-4" type="button" value="最新入库" onclick="getTopList(2, 0)">
             <input class="btn btn-default col-sm-4 col-xs-4" type="button" value="完结全本" onclick="getTopList(3, 0)">
         </ul>
@@ -147,7 +66,7 @@
 
     </div>
 </div>
-<%- include footer %>
+<%- include component/footer.ejs %>
 <script>
     var selectType = '<%= userInfo.typeId%>';
     var pageIndex = 0;
@@ -157,6 +76,10 @@
         'http://192.168.0.109:3000/bookState/getCount',
         'http://192.168.0.109:3000/bookState/getTopList',
     ];
+    $('.stateType input').click(function () {
+        $(this).siblings('input').removeClass('active');
+        $(this).addClass('active');
+    })
     // getCount(1);
     getTopList(1, 0);
     //获取分页数量rank
@@ -183,7 +106,7 @@
         );
     }
     //上一页或下一页
-    function getPage(delta = 0){
+    function getPage(delta){
         var index = parseInt(pageIndex) + parseInt(delta);
         //如果查找目录页面超过范围
         if(index<0 || (index>=pageCount && selectType != 3) || (index>=finishCount && selectType ==3)){

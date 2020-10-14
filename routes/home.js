@@ -1,5 +1,4 @@
-var express = require('express');
-var mysqlConnect = require('./mysqlConnect');
+var sqlExecute = require('./sqlExecute');
 
 exports.home = function (req, res) {
     res.render('home',
@@ -39,12 +38,9 @@ exports.recommend=function(req, res, next){
         case '4': sql = query4;break;
         default: sql = query1;
     }
-    mysqlConnect.mysqlConnect(sql,{}, function(err, result){
+    sqlExecute.mysqlConnect(sql, function(err, result){
         if (err) throw err;
         //如果检索到数据
         res.send({success: true, data: result});
     })
 };
-// exports.favicon = function (req, res) {
-//     res.send('favicon');
-// };

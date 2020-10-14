@@ -1,0 +1,42 @@
+<!--顶部导航栏-->
+<nav class="nav  nav-tabs navbar-inverse" role="navigation">
+    <div class="container-fluid">
+        <!--顶部左侧导航栏-->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#example-navbar-collapse">
+                <span class="sr-only">切换导航</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a  class="navbar-brand" href="/">笔趣阁手机版</a>
+        </div>
+        <!--顶部右侧导航-->
+        <div class="collapse navbar-collapse" id="example-navbar-collapse">
+
+            <!--个人信息下拉框-->
+            <ul class="nav navbar-nav navbar-sub navbar-right">
+                <!--如果是已经登陆展示的样式-->
+                <% if (userInfo.uId) { %>
+                    <li class="nav navbar-nav dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="true">
+                            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                            欢迎，<%= userInfo.uName %><span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">消息<span class="badge bg-warning">42</span></a></li>
+                            <li><a href="/user">个人信息</a></li>
+                            <li><a href="/logout">退出</a></li>
+                        </ul>
+                    </li>
+                    <!--如果还未登录展示的样式-->
+                <% }  else { %>
+                    <li><a href="/login">登入</a></li>
+                    <li><a href="/reg">注册</a></li>
+                <% } %>
+            </ul>
+        </div>
+    </div>
+</nav>

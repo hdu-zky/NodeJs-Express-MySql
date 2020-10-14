@@ -5,77 +5,34 @@
     <title>笔趣阁小说阅读</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/stylesheets/bookInfo.css">
+    <link rel="stylesheet" href="/stylesheets/common.css">
 </head>
-<style>
-
-</style>
 <body>
-<!--顶部导航栏-->
-<nav class="nav  nav-tabs navbar-inverse" role="navigation">
-    <div class="container-fluid">
-        <!--顶部左侧导航栏-->
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse"
-                    data-target="#example-navbar-collapse">
-                <span class="sr-only">切换导航</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a  class="navbar-brand" href="/">笔趣阁手机版</a>
-        </div>
-        <!--顶部右侧导航-->
-        <div class="collapse navbar-collapse" id="example-navbar-collapse">
-            <!--个人信息下拉框-->
-            <ul class="nav navbar-nav navbar-sub navbar-right">
-                <!--如果是已经登陆展示的样式-->
-                <% if (userInfo.uId) { %>
-                    <li class="nav navbar-nav dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                           aria-expanded="true">
-                            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                            欢迎，<%= userInfo.uName %><span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">消息<span class="badge bg-warning">42</span></a></li>
-                            <li><a href="/user">个人信息</a></li>
-                            <li><a href="/logout">退出</a></li>
-                        </ul>
-                    </li>
-                    <!--如果还未登录展示的样式-->
-                <% }  else { %>
-                    <li><a href="/login">登入</a></li>
-                    <li><a href="/reg">注册</a></li>
-                <% } %>
-            </ul>
-        </div>
-    </div>
-</nav>
-
-<%include header.ejs%>
-<%include search.ejs%>
+<% include component/topNavbar.ejs%>
+<%include component/header.ejs%>
+<%include component/search.ejs%>
 <div class="container">
     <div class="row">
         <div class="col-sm-12 book">
             <div class="bookImg">
-                <img class="img-thumbnail" alt="封面" id="bookImg" src='/images/bookImg/<%= bookData.bookId %>.jpg' style="width: 110px; height: 120px;">
+                <img class="img-thumbnail" alt="封面" id="bookImg" src='/images/bookImg/<%= userInfo.bookId %>.jpg' style="width: 110px; height: 120px;">
             </div>
             <div class="block_txt">
-                <p><a href='/bookInfo/<%= bookData.bookId %>'><%= bookData.bookName %></a></p>
-                <p>作者：<a href='/author/<%= bookData.authorName %>'><%= bookData.authorName %></a></p>
-                <p>分类：<%= bookData.bookTypeName %></p>
-                <p>状态：<% if (bookData.status == 1) { %>连载中<% }else { %>已完结<% } %></p>
+                <p><a href='/bookInfo/<%= userInfo.bookId %>'><%= userInfo.bookName %></a></p>
+                <p>作者：<a href='/author/<%= userInfo.authorName %>'><%= userInfo.authorName %></a></p>
+                <p>分类：<%= userInfo.bookTypeName %></p>
+                <p>状态：<% if (userInfo.status == 1) { %>连载中<% }else { %>已完结<% } %></p>
                 <p>更新：<span class="updateTime"></span></p>
-                <p>最新：<a href="/bookChapter/<%= bookData.bookId %>/<%= bookData.latestChapter %>">
-                        <%= bookData.latestChTitle %></a></p>
+                <p>最新：<a href="/bookChapter/<%= userInfo.bookId %>/<%= userInfo.latestChapter %>">
+                        <%= userInfo.latestChTitle %></a></p>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col-sm-12 col-xs-12">
         <div class="options">
-            <button type="button" class="btn btn-primary btnDwd" onclick="getDownload()">合集下载</button>
+            <a  type="button" class="btn btn-primary btnDwd" href="/booktxt/<%= userInfo.bookId %>/<%= userInfo.bookName %>.txt" download="<%= userInfo.bookName %>.txt">合集下载</a>
+            <!--<button type="button" class="btn btn-primary btnDwd" onclick="getDownload()">合集下载</button>-->
             <button type="button" class="btn btn-primary" onclick="addToShelf()" id="addToShelf">加入书架</button>
         </div>
         </div>
@@ -83,7 +40,7 @@
 
     <div class="intro">小说简介</div>
     <div class="intro_info">
-        <%= bookData.Introduction %>
+        <%= userInfo.Introduction %>
     </div>
     <div class="intro">最新章节预览</div>
     <ul class="chapter" id="latestCatalog"></ul>
@@ -101,15 +58,13 @@
     </div>
 
 </div>
-<%include footer.ejs%>
-<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
-<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<%include component/footer.ejs%>
 <script>
-    const bookId = '<%= bookData.bookId %>';
-    var catalogCount = '<%= bookData.pageCount %>';
-    var userId = '<%= bookData.uId%>';
-    var filename = '<%= bookData.bookName %>';
-    var time = '<%= bookData.updateTime %>';
+    const bookId = '<%= userInfo.bookId %>';
+    var catalogCount = '<%= userInfo.pageCount %>';
+    var userId = '<%= userInfo.uId%>';
+    var filename = '<%= userInfo.bookName %>';
+    var time = '<%= userInfo.updateTime %>';
     //当前目录页面序号
     var catalogIndex=0;
     $(function () {
@@ -138,15 +93,16 @@
     }
     //下载本书电子合集
     function getDownload() {
+        $('.btnDwd').prop('disabled', true);
         var params = {filename: filename, bookId: bookId};
         postExcelFile(params, "http://192.168.0.109:3000/getDownload");
+        $('.btnDwd').prop('disabled', false);
     }
     function postExcelFile(params, url) { //params是post请求需要的参数，url是请求url地址
         var form = document.createElement("form");
         form.style.display = 'none';
         form.action = url;
         form.method = "post";
-        // form.enctype = "multipart/form-data";
         document.body.appendChild(form);
 
         for(var key in params){
@@ -157,7 +113,7 @@
             form.appendChild(input);
         }
         form.submit();
-        form.remove();
+        // form.remove();
     }
 
     // 检查本书是否已在书架中
@@ -227,7 +183,7 @@
         checkState(catalogIndex, catalogCount)
     }
     //获取章节目录
-    function getCatalog(pageIndex=0) {
+    function getCatalog( pageIndex ) {
         pageIndex = $('#selectIndex').children('option:selected').val();
         catalogIndex = pageIndex;
         if(bookId==''){
@@ -249,7 +205,7 @@
     }
 
     //上一页或下一页
-    function getPage(delta = 0){
+    function getPage( delta ){
         var catIndex = parseInt(catalogIndex) + parseInt(delta);
         // console.log(catIndex);
         //如果查找目录页面超过范围

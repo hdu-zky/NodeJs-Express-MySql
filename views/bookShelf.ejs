@@ -2,34 +2,25 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>笔趣阁小说阅读</title>
+    <title>小说书架</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/stylesheets/bookInfo.css">
+    <link rel="stylesheet" href="/stylesheets/common.css">
 </head>
-<style>
-
-</style>
 <body>
-<!--顶部导航栏-->
-<nav class="nav  nav-tabs navbar-inverse" role="navigation">
-    <div class="container-fluid">
-        <!--顶部左侧导航栏-->
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse"
-                    data-target="#example-navbar-collapse">
-                <span class="sr-only">切换导航</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a  class="navbar-brand" href="/">笔趣阁手机版</a>
-        </div>
-    </div>
-</nav>
+<% include component/topNavbar.ejs%>
 
-<%include header.ejs%>
-<%include search.ejs%>
+<!--导航栏-->
+<div class="header">
+    <ul>
+        <li><a href="/">首页</a></li>
+        <li><a href="/bookSort">分类</a></li>
+        <li><a href="/bookRank/1">排行</a></li>
+        <li><a href="/bookState/1">全本</a></li>
+        <li class="active"><a href="/bookShelf">书架</a></li>
+    </ul>
+</div>
+<%include component/search.ejs%>
 <div class="container">
 <div class="intro">你的书架</div>
     <div class="bookShelf">
@@ -58,7 +49,7 @@
     </ul>
 </div>
 </div>
-<%- include footer.ejs %>
+<%- include component/footer.ejs %>
 <script>
     function formateDate(date) {
         var date = new Date(date);

@@ -49,7 +49,8 @@
             <img alt="logo" src="/images/headImgDefault.png">
             <span>欢迎注册新账号</span>
         </div>
-        <form class="form-horizontal" action="/reg"  method="post">
+        <!--action="/reg"  method="post"-->
+        <form class="form-horizontal">
             <div class="form-group">
                 <!--<label for="inputName" class="control-label col-xs-3">帐号</label>-->
                 <div class="col-xs-12">
@@ -113,9 +114,9 @@
                 </div>
             </div>
             <div class="form-group">
-                <!--<label for="inputPwd" class="control-label col-xs-3"></label>-->
+                <!--<label for="inputPwd" class="control-label col-xs-3"></label>type="submit" -->
                 <div class="col-xs-12">
-                    <button type="submit" class="btn btn-primary col-xs-12" id="register">注 册</button>
+                    <button class="btn btn-primary col-xs-12" id="register">注 册</button>
                 </div>
             </div>
             <div class="form-group">
@@ -128,9 +129,11 @@
         </form>
     </div>
     <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <script type="text/javascript" src="/javascripts/md5.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.2/js/bootstrapValidator.min.js"></script>
 <script>
+    var verifyCode;
     $('form').bootstrapValidator({
         message: 'This value is not valid',
         feedbackIcons: {
@@ -179,6 +182,17 @@
                     },
                     emailAddress: {
                         message: '非法邮箱地址'
+                    },
+                    threshold :  4 , //设置4字符以上开始请求服务器
+                    //有待验证，备注以备下次使用。
+                    //bootstrap的remote验证器需要的返回结果一定是json格式的数据 :
+                    //{"valid":false} //表示不合法，验证不通过
+                    //{"valid":true} //表示合法，验证通过
+                    remote: {//发起Ajax请求。
+                        url: '/userEmail',//验证地址
+                        message: '邮箱已存在',//提示消息
+                        delay :  2000,//设置2秒发起名字验证
+                        type: 'POST' //请求方式
                     }
                 }
             },
@@ -212,6 +226,18 @@
                         regexp: /^[0-9]+$/,
                         message: '电话号码只能是数字'
                     },
+                    threshold :  11 , //设置4字符以上开始请求服务器
+                    //有待验证，备注以备下次使用。
+                    //bootstrap的remote验证器需要的返回结果一定是json格式的数据 :
+                    //{"valid":false} //表示不合法，验证不通过
+                    //{"valid":true} //表示合法，验证通过
+                    remote: {//发起Ajax请求。
+                        url: '/userPhone',//验证地址
+                        // data:{name:$('input[name="name"]').val() },
+                        message: '电话号码已存在',//提示消息
+                        delay :  2000,//设置2秒发起名字验证
+                        type: 'POST' //请求方式
+                    }
                 }
             },
             pwd: {
@@ -251,40 +277,75 @@
         }
     });
     // 发送验证码
-    $(function() {
-        $('#getVerifyCode').click(
-            function () {
-                var email = $('#inputEmail').val();
-                var name = $('#inputName').val();
-                //alert('用户名 '+ name +'邮箱 '+email);
-                console.log('用户名 '+ name +'邮箱 '+email);
-                if (email.length == 0 || name.length == 0) {
-                    alert("用户名和邮箱不能为空！"+'用户名 '+ name +'邮箱 '+email);
-                    return;
-                } else {
-                    $.post(
-                        '/sendEmail',
-                        {
-                            userName: name,
-                            userEmail: email
-                        },
-                        function (result) {
-                            if(result.code == 200){
-                                var sec = "<p>邮件发送成功，请到<a href=mailto:"+email;
-                                var sec1 = ">"+email+"</a>查看验证码</p>";
-                                console.log(sec+sec1);
-                                $('#modal-msg').html(sec+sec1);
-                                $('#myModal').modal('show');
-                            }else{
-                                alert("邮件发送失败");
-                            }
-                            // alert(JSON.stringify(result));
-                            // $('#content').text(JSON.stringify(result));
+    $('#getVerifyCode').click(
+        function () {
+            var email = $('#inputEmail').val();
+            var name = $('#inputName').val();
+            if (email.length == 0 || name.length == 0) {
+                alert("用户名和邮箱不能为空！");
+                return;
+            } else {
+                $.post('http://192.168.0.109:3000/sendEmail',{userName: name,userEmail: email},
+                    function (result) {
+                        console.log(result);
+                        if(result.success){
+                            var sec = "<p>邮件发送成功，请到<a href=mailto:"+email;
+                            var sec1 = ">"+email+"</a>查看验证码</p>";
+                            $('#modal-msg').html(sec+sec1);
+                            $('#myModal').modal('show');
+                            verifyCode = result.msg;
+                        }else{
+                            alert(result.msg);
                         }
-                    );
-                }
+                    });
             }
-        );
+        }
+    );
+    // 发送验证码
+    $('#register').click(
+        function () {
+        var name = $('#inputName').val();
+        var email = $('#inputEmail').val();
+        var vCode = $('#verifyCode').val();
+        var phone = $('#inputPhone').val();
+        var pwd = $('#inputPwd').val();
+        var pwd2 = $('#inputPwd2').val();
+        var state = false;
+        if (email.length === 0 || name.length === 0 ||verifyCode.length === 0 ||phone.length === 0 ||pwd.length === 0 ||pwd2.length === 0) {
+            alert("输入不能为空！");
+            return;
+        }
+        if(verifyCode !== $.md5(vCode)){
+            alert("验证码错误！");
+            return;
+        }
+        if(pwd !== pwd2){
+            alert("两次输入密码不一致");
+            return;
+        }
+        $.post('http://192.168.0.109:3000/reg/checkState',{name: name, email: email, phone: phone},
+            function (result) {
+                //如果用户名/邮箱/电话号码已存在
+                console.log(result);
+                if(result.success){
+                    state = true;
+                    alert(result.msg);
+                }
+            });
+        //如果用户名/邮箱/电话号码不存在
+        if(!state){
+            $.post('http://192.168.0.109:3000/reg',{name: name, email: email, phone: phone, pwd: pwd},
+                function (result) {
+                    console.log(result);
+                    if(result.success){
+                        alert(result.msg);
+                        window.location.href = '/login';
+                    }else{
+                        alert(result.msg);
+                        return;
+                    }
+                });
+        }
     });
 </script>
 </body>

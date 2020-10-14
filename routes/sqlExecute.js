@@ -1,6 +1,5 @@
-var conn= '';
 var mysql = require('mysql');
-exports.mysqlConnect= function(sql, param,callFunction) {
+exports.mysqlConnect= function(sql, callFunction) {
     //1. 配置数据库连接参数,创建连接对象
     var connection = mysql.createConnection({
         host: 'localhost',
@@ -11,11 +10,8 @@ exports.mysqlConnect= function(sql, param,callFunction) {
     });
     //1. 建立连接
     connection.connect();
-
     // 2. 发送SQL语句到mysql服务端执行
-
-    connection.query(sql, param, callFunction);
-
+    connection.query(sql, callFunction);
     // 3. 关闭连接
     connection.end();
 };

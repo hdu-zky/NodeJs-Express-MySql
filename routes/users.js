@@ -1,33 +1,5 @@
-var express = require('express');
-var mysql = require('mysql');
-// const fs = require("fs");
-// const multer = require("multer");
-var router = express.Router();
-// var storage = multer.diskStorage({
-//     //设置上传后文件路径，uploads文件夹需要手动创建！！！
-//     destination: function (req, file, cb) {
-//         cb(null, './public/uploads')
-//     },
-//     //给上传文件重命名，获取添加后缀名
-//     filename: function (req, file, cb) {
-//         var fileFormat = (file.originalname).split(".");
-//         cb(null, file.fieldname + '-' + Date.now() + "." + fileFormat[fileFormat.length - 1]);
-//     }
-// });
-// //添加配置文件到muler对象。
-// var upload = multer({
-//     storage: storage
-// });
-// var upload = multer({dest:'public/upload/'});
+var sqlExecute = require('./sqlExecute');
 
-/* GET users listing. */
-var connection = mysql.createConnection({
-    host:'localhost',
-    port:'3306',
-    user:'root',
-    password:'223412',//修改为自己的密码
-    database:'nodeexpress'//修改为自己的数据库
-});
 exports.userHtml = function(req, res, next) {
   res.render('users');
 };
@@ -41,10 +13,8 @@ exports.getProfile = function(req, res, next){
     }
 
     var sql = "select headImg, nickName, sex, signature from user where userId = '"+req.session.user+"' ";
-    // connection.connect();
-    connection.query(sql,function(err, result){
+    sqlExecute.mysqlConnect(sql,function(err, result){
         if (err) throw err;
-        // console.log(result);
         if(result.length != 0){
             res.send({
                 code: 200,
@@ -73,11 +43,8 @@ exports.uploadFile = function(req, res, next){
             msg: "上传失败,当前会话已关闭，请重新登录"
         });
     }
-    // connection.connect();
-    console.log(req.session.rolename,req.session.user);
-    // var headImg = "/images/"+req.file.filename;
     var query = "UPDATE user SET headImg = '"+ headImg +"' WHERE userId = '"+req.session.user+"' ";
-    connection.query(query,function(err, result){
+    sqlExecute.mysqlConnect(query,function(err, result){
         if (err) throw err;
         res.status(200).send({
             code: 200,
@@ -100,15 +67,15 @@ exports.updateProfile = function(req, res, next) {
     var query2 = "UPDATE user SET sex = '"+ sex +"' WHERE userId = '"+req.session.user+"' ";
     var query3 = "UPDATE user SET signature = '"+ signature +"' WHERE userId = '"+req.session.user+"' ";
     var s1=false, s2=false, s3=false;
-    connection.query(query,function(err, result){
+    sqlExecute.mysqlConnect(query,function(err, result){
         if (err) throw err;
         s1=true;
     });
-    connection.query(query2,function(err, result){
+    sqlExecute.mysqlConnect(query2,function(err, result){
         if (err) throw err;
         s2=true;
     });
-    connection.query(query3,function(err, result){
+    sqlExecute.mysqlConnect(query3,function(err, result){
         if (err) throw err;
         s3=true;
     });
@@ -130,7 +97,7 @@ exports.getAccount =  function(req, res, next) {
         });
     }
     var sql = "select nickName, userEmail, userPhone from user where userId = '"+req.session.user+"' ";
-    connection.query(sql,function(err, result){
+    sqlExecute.mysqlConnect(sql,function(err, result){
         if (err) throw err;
         if(result.length != 0){
             res.send({
@@ -173,15 +140,15 @@ exports.updateAccount =  function(req, res, next) {
     var query2 = "UPDATE user SET userEmail = '"+ userEmail +"' WHERE userId = '"+req.session.user+"' ";
     var query3 = "UPDATE user SET userPhone = '"+ userPhone +"' WHERE userId = '"+req.session.user+"' ";
     var s1=false, s2=false, s3=false;
-    connection.query(query,function(err, result){
+    sqlExecute.mysqlConnect(query,function(err, result){
         if (err) throw err;
         s1=true;
     });
-    connection.query(query2,function(err, result){
+    sqlExecute.mysqlConnect(query2,function(err, result){
         if (err) throw err;
         s2=true;
     });
-    connection.query(query3,function(err, result){
+    sqlExecute.mysqlConnect(query3,function(err, result){
         if (err) throw err;
         s3=true;
     });
@@ -193,4 +160,3 @@ exports.updateAccount =  function(req, res, next) {
     res.redirect('/user');
     // }
 };
-// module.exports = router;

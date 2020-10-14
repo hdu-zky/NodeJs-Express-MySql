@@ -1,5 +1,4 @@
-var express = require('express');
-var mysqlConnect = require('./mysqlConnect');
+var sqlExecute = require('./sqlExecute');
 
 
 // 处理请求返回分类页面
@@ -7,7 +6,7 @@ exports.getBookState = function (req, res) {
     var typeId = req.params.id;
     var query = "select COUNT(bookId) as count from bookinfo";
     var pageCount;
-    mysqlConnect.mysqlConnect(query,{}, function(err, result){
+    sqlExecute.mysqlConnect(query, function(err, result){
         if (err) throw err;
         pageCount = (result[0].count%20)==0? (result[0].count/20):((result[0].count-result[0].count%20)/20+1);
         res.render('bookState',
@@ -45,7 +44,7 @@ exports.getTopList=function(req, res, next){
         case '3': sql = query3;break;
         default: sql = query;
     }
-    mysqlConnect.mysqlConnect(sql,{}, function(err, result){
+    sqlExecute.mysqlConnect(sql, function(err, result){
         if (err) throw err;
         //如果检索到数据
         if(result.length>0){
@@ -79,7 +78,7 @@ exports.getCount=function (req, res, next) {
     var selectType = req.body.selectType;
     var query = "select COUNT(bookId) as count from book";
     var query2 = "select COUNT(bookId) as count from book where status = '0'";
-    mysqlConnect.mysqlConnect(selectType==3?query2:query,{}, function(err, result){
+    sqlExecute.mysqlConnect(selectType==3?query2:query, function(err, result){
         if (err) throw err;
         //如果检索到数据
         console.log(result[0].count);

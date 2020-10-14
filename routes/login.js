@@ -1,8 +1,4 @@
-var express = require('express');
-var async = require('async');
-var path = require("path");
-var mysql = require('mysql');
-var router = express.Router();
+var sqlExecute = require('./sqlExecute');
 
 //router.get('/',function(req,res){
 //    res.sendfile(path.join(__dirname,"../public/login.html"))
@@ -17,22 +13,13 @@ var router = express.Router();
 exports.Plogin = function(req, res, next){
     var name = req.body.name;
     var pwd = req.body.pwd;
-    // console.log(name+pwd);
-    var connection = mysql.createConnection({
-        host:'localhost',
-        port:'3306',
-        user:'root',
-        password:'223412',//修改为自己的密码
-        database:'nodeexpress'//修改为自己的数据库
-    });
-    connection.connect();
     // (userId='"+name+"' or nickName='"+name+"')
     var query1 = "select userId, nickName, headImg, userPhone, userEmail from user" +
         " where( userId='"+name+"' or nickName='"+name+"')"+
         // " where nickName='"+name+"'" +
         "and passWord='"+pwd+"'";
-    connection.query(query1,function(err, result){
-        if (err) throw err;
+    sqlExecute.mysqlConnect(query1,function(err, result){
+        if (err) console.log(err);
         //如果检索到数据
         if(result.length==1){
             req.session.user = result[0].userId.toString();
@@ -51,8 +38,6 @@ exports.Plogin = function(req, res, next){
             res.cookie('_user', result[0].userId, {maxAge: 60 * 1000 * 60 * 24 * 7});
             res.clearCookie('login_error');
             res.send({success: true, msg: '登录成功，欢迎' ,data: userInfo});
-            // res.redirect('/');
-
         }else{
             if (req.cookies.login_error) {
                 res.cookie('login_error', parseInt(req.cookies.login_error) + 1, {maxAge: 60 * 1000 * 60 * 24 * 7});
@@ -60,11 +45,8 @@ exports.Plogin = function(req, res, next){
                 res.cookie('login_error', 1, {maxAge: 60 * 1000 * 60 * 24 * 7});
             }
             res.send({success: false,  msg:'用户名或密码错误'});
-            // res.redirect('/login');
         }
-        connection.end();
     });
-    // connection.end();
 };
 exports.Glogin = function (req, res) {
     // if (req.session.user && req.url != '/login') {

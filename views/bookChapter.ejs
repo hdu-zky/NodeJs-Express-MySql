@@ -2,61 +2,15 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>笔趣阁小说阅读</title>
+    <title><%= bookTxt.chapterTitle %>_<%= bookTxt.bookName %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-    <!--<link rel="stylesheet" href="/stylesheets/bookInfo.css">-->
+    <link rel="stylesheet" href="/stylesheets/common.css">
 </head>
-<style>
-    body{
-        background: #F8F0DD;
-    }
-    #content{
-        font-size: 18px;
-    }
-    .selectPage{
-        margin-top: 60px;
-    }
-    .prevPage{
-        width: 26%;
-        margin-right: 2%;
-    }
-    .backPage{
-        height: 34px;
-        width: 40%;
-        margin-right: 2%;
-        border-radius: 5px;
-    }
-    .nextPage{
-        width: 26%;
-    }
-    .footer {
-         height: 100px;
-         background: #ECF0F0;
-         padding: 3px 0 0;
-         border-top: 1px solid #f1f1f1;
-         text-align: center;
-         position: relative;
-         z-index: 999;
-     }
-    .footer ul {
-        padding: 10px 0px 0px 0px;
-        margin: 0px;
-        clear: both;
-        height: 30px;
-    }
-    .footer li {
-        float: left;
-        text-align: center;
-        width: 25%;
-        font-size: 16px;
-        padding: 0px;list-style: none;
-    }
-</style>
-<body>
+<body style="background: #F8F0DD;color: black;">
 <div class="container">
     <h3 class="text-center title"><%= bookTxt.chapterTitle %></h3>
-    <div id="content"></div>
+    <div id="content" style="font-size: 18px;color: black;"></div>
     <div class="row selectPage">
         <div class="col-sm-12 col-xs-12">
             <button type="button" class="btn btn-primary prevPage" onclick="getPage(-1)">上一章</button>
@@ -66,7 +20,7 @@
         </div>
     </div>
 </div>
-<%- include footer.ejs %>
+<%- include component/footer.ejs %>
 <script>
     //获取最新章节号
     var maxChapterNum = parseInt(localStorage.getItem('latestChapterId'));
@@ -89,8 +43,6 @@
                     var tmp = result.bookContent;
                     var html='';
                     html += '<p>'+tmp;
-                    // html = html.replaceWith('\n', '</p><p>');
-                    // html = html.replaceAll('\n', '</p><p>');
                     // 文本的换行替换成p标签
                     html = html.replace(new RegExp('\n','g'), '</p><p>');
                     html += '</p>';
@@ -100,7 +52,7 @@
             }
         )
     };
-    function getPage(delta=1){
+    function getPage(delta){
         chapterId += delta;
         // var newId = parseInt(chapterId)+delta;
         console.log(chapterId);

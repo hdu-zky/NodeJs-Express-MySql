@@ -1,15 +1,14 @@
-var express = require('express');
-var mysqlConnect = require('./mysqlConnect');
+var sqlExecute = require('./sqlExecute');
 
 // 处理请求返回分类页面
 exports.getBookRank = function (req, res) {
     var typeId = req.params.id;
     var query = "select COUNT(bookId) as count from bookinfo";
     var pageCount;
-    mysqlConnect.mysqlConnect(query,{}, function(err, result){
+    sqlExecute.mysqlConnect(query, function(err, result){
         if (err) throw err;
         pageCount = (result[0].count%20)==0? (result[0].count/20):((result[0].count-result[0].count%20)/20+1);
-        res.render('rank',
+        res.render('bookRank',
             userInfo={ //第二个参数分配模板
                 uId: req.session.user,
                 uName: req.session.rolename,
@@ -24,7 +23,6 @@ exports.getBookRank = function (req, res) {
 exports.getTopList=function(req, res, next){
     var selectType = req.body.selectType;
     var pageIndex = req.body.pageIndex;
-    console.log('getTopList');
     var query = "select bookId, bookName, authorId, authorName, bookTypeName, bookVisits from bookinfo" +
         " order by bookVisits desc";
     var query2 = "select bookId, bookName, authorId, authorName, bookTypeName, bookVisits from bookinfo" +
@@ -38,8 +36,7 @@ exports.getTopList=function(req, res, next){
         case '3': sql = query3;break;
         default: sql = query;
     }
-    console.log(sql);
-    mysqlConnect.mysqlConnect(sql,{}, function(err, result){
+    sqlExecute.mysqlConnect(sql, function(err, result){
         if (err) throw err;
         //如果检索到数据
         if(result.length>0){
@@ -59,7 +56,7 @@ exports.getTopList=function(req, res, next){
 exports.getCount=function (req, res, next) {
     // var bookId = req.body.bookId;
     var query = "select COUNT(bookId) as count from bookinfo";
-    mysqlConnect.mysqlConnect(query,{}, function(err, result){
+    sqlExecute.mysqlConnect(query, function(err, result){
         if (err) throw err;
         //如果检索到数据
         // console.log('getCount');

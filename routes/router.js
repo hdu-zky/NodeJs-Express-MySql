@@ -6,8 +6,8 @@ var index = require('../routes/index');
 var user = require('../routes/users');
 var login = require('../routes/login');
 var reg = require('../routes/reg');
-var sort = require('../routes/sort');
-var rank = require('../routes/rank');
+var bookSort = require('../routes/bookSort');
+var bookRank = require('../routes/bookRank');
 var bookState = require('../routes/bookState');
 var bookInfo = require('../routes/bookInfo');
 var bookShelf = require('../routes/bookShelf');
@@ -39,7 +39,10 @@ router.get('/index', index.index);
 router.get('/reg', reg.regHtml);
 router.post('/sendEmail', reg.sendEmail);
 router.post('/reg', reg.register);
+router.post('/reg/checkState', reg.checkState);
 router.post('/userName', reg.userName);
+router.post('/userEmail', reg.userEmail);
+router.post('/userPhone', reg.userPhone);
 
 router.get('/login', login.Glogin);
 router.post('/login', login.Plogin);
@@ -52,13 +55,13 @@ router.get('/getAccount', user.getAccount);
 router.post('/updateAccount', user.updateAccount);
 router.post('/uploadFile', upload.single('myfile'), user.uploadFile);
 
-router.get('/sort', sort.rootHTML);
-router.post('/sort', sort.getSortBook);
-router.post('/searchBook', sort.searchBook);
+router.get('/bookSort', bookSort.rootHTML);
+router.post('/bookSort', bookSort.getSortBook);
+router.post('/searchBook', bookSort.searchBook);
 
-router.get('/rank/:id', rank.getBookRank);
-router.post('/rank/getTopList', rank.getTopList);
-router.post('/rank/getCount', rank.getCount);
+router.get('/bookRank/:id', bookRank.getBookRank);
+router.post('/bookRank/getTopList', bookRank.getTopList);
+router.post('/bookRank/getCount', bookRank.getCount);
 
 router.get('/bookState/:id', bookState.getBookState);
 router.post('/bookState/getCount', bookState.getCount);
@@ -81,9 +84,5 @@ router.post('/bookShelf/removeBook', bookShelf.removeBook);
 
 router.get('/bookChapter/:bookId/:textId', bookChapter.bookChapterHTML);
 router.post('/bookChapter/getBookContent', bookChapter.getBookContent);
-/* GET home page. */
-// router.get('/', function(req, res, next) {
-//   res.render('index', { title: 'Express' });
-// });
 
 module.exports = router;
