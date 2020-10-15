@@ -1,5 +1,6 @@
 var mysql = require('mysql');
-exports.mysqlConnect= function(sql, callFunction) {
+exports.hostUrl = 'http://192.168.0.109:3000/';
+exports.mysqlConnect = function(query, params, callFunction) {
     //1. 配置数据库连接参数,创建连接对象
     var connection = mysql.createConnection({
         host: 'localhost',
@@ -11,7 +12,7 @@ exports.mysqlConnect= function(sql, callFunction) {
     //1. 建立连接
     connection.connect();
     // 2. 发送SQL语句到mysql服务端执行
-    connection.query(sql, callFunction);
+    connection.query(query, params, callFunction);
     // 3. 关闭连接
     connection.end();
 };

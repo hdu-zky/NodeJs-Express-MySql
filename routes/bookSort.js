@@ -1,6 +1,16 @@
 var sqlExecute = require('./sqlExecute')
 
-// 处理请求返回分类页面
+/**
+ * @api {get} /bookSort 处理请求返回分类页面
+ * @apiName rootHTML
+ * @apiGroup bookSort
+ * @apiSuccess {String} success 成功返回信息.
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     bookInfo.html
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 500 server error
+ * */
 exports.rootHTML = function (req, res) {
     res.render('bookSort',
         userInfo={ //第二个参数分配模板
@@ -8,6 +18,38 @@ exports.rootHTML = function (req, res) {
             uName: req.session.rolename,
         });
 };
+/**
+ * @api {post} /bookSort 获取某一分类下分页数据
+ * @apiName getSortBook
+ * @apiGroup bookSort
+ * @apiParam {string} bookTypeId 书籍分类编号
+ * @apiParam {string} pageIndex 页面序号
+ * @apiParam {string} pageSize 页面大小
+ * @apiSuccess {String} success 成功返回信息.
+ * @apiSuccess {String} pageCount 分页数量.
+ * @apiSuccess {Array} data 分页数据.
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "success": true,
+ *        pageCount: 6,
+ *        data: [
+ *          {
+ *              bookId：1，
+ *              bookName：'人皇'，
+ *              authorName：'十步行'，
+ *              bookTypeName：'玄幻小说'
+ *          }
+ *       ]
+ *     }
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 500 server error
+ *     {
+ *       "success": false,
+ *        pageCount: 0,
+ *        data:{}
+ *     }
+ * */
 exports.getSortBook = function (req, res, next) {
     var bookTypeId = req.body.bookTypeId;
     // 页面序号
@@ -15,9 +57,9 @@ exports.getSortBook = function (req, res, next) {
     // 每页数据量大小
     var pageSize = req.body.pageSize;
     var pageArray=[], i=0, j=0;
-    var query = "select bookId, bookName, authorId, authorName, bookTypeName from bookinfo" +
+    var query = "select bookId, bookName, authorName, bookTypeName from bookinfo" +
         " where bookTypeId='"+bookTypeId+"'" ;
-    sqlExecute.mysqlConnect(query,function(err, result){
+    sqlExecute.mysqlConnect(query,{},function(err, result){
         if (err) throw err;
         //如果检索到数据
         if(result.length > 0){
@@ -33,19 +75,4 @@ exports.getSortBook = function (req, res, next) {
             res.send({success: true,  pageCount: 0, data:{}});
         }
     });
-};
-//查找书籍或作者
-exports.searchBook = function(req, res, next){
-    var keyword = req.body.keyWord;
-    var query = "select bookId, bookName, authorId, authorName, bookTypeName from bookinfo" +
-        " where (bookName  LIKE '%"+ keyword +"%' or authorName  LIKE '%"+ keyword +"%')" ;
-    sqlExecute.mysqlConnect(query,function(err, result){
-        if (err) throw err;
-        //如果检索到数据
-        if(result.length > 0){
-            res.send({success: true, data: result});
-        }else{
-            res.send({success: false, data: {}});
-        }
-    })
 };

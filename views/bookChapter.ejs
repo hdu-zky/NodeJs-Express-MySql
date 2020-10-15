@@ -7,10 +7,10 @@
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/stylesheets/common.css">
 </head>
-<body style="background: #F8F0DD;color: black;">
+<body style="background: #F8F0DD;">
 <div class="container">
     <h3 class="text-center title"><%= bookTxt.chapterTitle %></h3>
-    <div id="content" style="font-size: 18px;color: black;"></div>
+    <div id="content" style="font-size: 18px;"></div>
     <div class="row selectPage">
         <div class="col-sm-12 col-xs-12">
             <button type="button" class="btn btn-primary prevPage" onclick="getPage(-1)">上一章</button>
@@ -37,7 +37,7 @@
             return;
         }
         console.log(chapterContentUrl);
-        $.post('http://192.168.0.109:3000/bookChapter/getBookContent', {chapterContentUrl: chapterContentUrl},
+        $.post(hostUrl + '/bookChapter/getBookContent', {chapterContentUrl: chapterContentUrl},
             function (result) {
                 if (result.success) {
                     var tmp = result.bookContent;

@@ -73,8 +73,8 @@
     var pageCount = '<%= userInfo.pageCount%>';
     var finishCount = 0;
     var httpUrl=[
-        'http://192.168.0.109:3000/bookState/getCount',
-        'http://192.168.0.109:3000/bookState/getTopList',
+        hostUrl + '/bookState/getCount',
+        hostUrl + '/bookState/getTopList',
     ];
     $('.stateType input').click(function () {
         $(this).siblings('input').removeClass('active');

@@ -18,7 +18,7 @@ exports.Plogin = function(req, res, next){
         " where( userId='"+name+"' or nickName='"+name+"')"+
         // " where nickName='"+name+"'" +
         "and passWord='"+pwd+"'";
-    sqlExecute.mysqlConnect(query1,function(err, result){
+    sqlExecute.mysqlConnect(query1,{},function(err, result){
         if (err) console.log(err);
         //如果检索到数据
         if(result.length==1){

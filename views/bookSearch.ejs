@@ -52,7 +52,7 @@
         var keyWord = $('#inputBook').val();
         console.log(keyWord);
         console.log(type);
-        $.post('http://192.168.0.109:3000/search', {keyWord: keyWord, type: type},function (result) {
+        $.post(hostUrl + '/search', {keyWord: keyWord, type: type},function (result) {
             console.log(result.data);
             if (result.success) {
                 console.log(result.data);

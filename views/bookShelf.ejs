@@ -30,7 +30,7 @@
         <li class="row" id="book-<%= bookData.bookId %>">
             <div class="bookImg">
                 <a href="/bookInfo/<%= bookData.bookId %>">
-                    <img class="img-thumbnail" alt="封面" id="bookImg" src='/images/bookImg/<%= bookData.bookId %>.jpg' width=110px height=140px>
+                    <img class="img-thumbnail" alt="封面" id="bookImg" src='<%= bookData.bookImg %>' width=110px height=140px>
                 </a>
             </div>
             <div class="bookInfo">
@@ -75,7 +75,7 @@
         const con = confirm( "确定删除该书么" ); //在页面上弹出确认对话框
         if (con== false )return;
         $('.btn').prop('disabled', true);
-        $.post('http://192.168.0.109:3000/bookShelf/removeBook', {userId: userId, bookId: bookId},
+        $.post(hostUrl + '/bookShelf/removeBook', {userId: userId, bookId: bookId},
             function (result) {
                 if (result.success) {
                     //移除HTML节点

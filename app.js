@@ -2,6 +2,8 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var logger = require('morgan');
+var winston =require('winston');
+var expressWinston =require('express-winston');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
@@ -39,21 +41,45 @@ app.use(express.static(path.join(__dirname, 'public')));
 /* 中间件,判断用户是否登录 */
 app.use(function (req, res, next) {
     if ((req.url !== '/login'  && req.session.user === undefined) && req.url!=='/reg'&& req.url!=='/sendEmail'
-        && req.url!=='/userName'&& req.url!=='/userEmail'&& req.url!=='/userPhone') {
+        && req.url!=='/userName'&& req.url!=='/userEmail'&& req.url!=='/userPhone' && req.url !== '/index') {
         res.redirect('/login');
         return;
     }
-    // res.locals.user = req.session.user;
-    // res.locals.auths = req.session.auths;
-    // res.locals.rolename = req.session.rolename;
-    // res.locals.headImg = req.session.headImg;
     next();
 });
+// // 正常请求的日志
+// app.use(expressWinston.logger({
+//     transports: [
+//         new (winston.transports.Console)({
+//             json: true,
+//             colorize: true
+//         }),
+//         new winston.transports.File({
+//             filename: 'logs/success.log'  //成功的日志记录在log/success.log
+//         })
+//     ]
+// }));
 app.use('/', router);
+
+// //记录错误的日志信息
+// app.use(expressWinston.errorLogger({
+//     transports: [
+//         new winston.transports.Console({
+//             json: true,
+//             colorize: true
+//         }),
+//         new winston.transports.File({
+//             filename: 'logs/error.log'   //失败的日志记录在log/success.log
+//         })
+//     ]
+// }));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  next(createError(404));
+    // next(createError(404));
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
 });
 
 // error handler

@@ -13,7 +13,7 @@ exports.getProfile = function(req, res, next){
     }
 
     var sql = "select headImg, nickName, sex, signature from user where userId = '"+req.session.user+"' ";
-    sqlExecute.mysqlConnect(sql,function(err, result){
+    sqlExecute.mysqlConnect(sql,{},function(err, result){
         if (err) throw err;
         if(result.length != 0){
             res.send({
@@ -44,7 +44,7 @@ exports.uploadFile = function(req, res, next){
         });
     }
     var query = "UPDATE user SET headImg = '"+ headImg +"' WHERE userId = '"+req.session.user+"' ";
-    sqlExecute.mysqlConnect(query,function(err, result){
+    sqlExecute.mysqlConnect(query,{},function(err, result){
         if (err) throw err;
         res.status(200).send({
             code: 200,
@@ -67,15 +67,15 @@ exports.updateProfile = function(req, res, next) {
     var query2 = "UPDATE user SET sex = '"+ sex +"' WHERE userId = '"+req.session.user+"' ";
     var query3 = "UPDATE user SET signature = '"+ signature +"' WHERE userId = '"+req.session.user+"' ";
     var s1=false, s2=false, s3=false;
-    sqlExecute.mysqlConnect(query,function(err, result){
+    sqlExecute.mysqlConnect(query,{},function(err, result){
         if (err) throw err;
         s1=true;
     });
-    sqlExecute.mysqlConnect(query2,function(err, result){
+    sqlExecute.mysqlConnect(query2,{},function(err, result){
         if (err) throw err;
         s2=true;
     });
-    sqlExecute.mysqlConnect(query3,function(err, result){
+    sqlExecute.mysqlConnect(query3,{},function(err, result){
         if (err) throw err;
         s3=true;
     });
@@ -97,7 +97,7 @@ exports.getAccount =  function(req, res, next) {
         });
     }
     var sql = "select nickName, userEmail, userPhone from user where userId = '"+req.session.user+"' ";
-    sqlExecute.mysqlConnect(sql,function(err, result){
+    sqlExecute.mysqlConnect(sql,{},function(err, result){
         if (err) throw err;
         if(result.length != 0){
             res.send({
@@ -140,15 +140,15 @@ exports.updateAccount =  function(req, res, next) {
     var query2 = "UPDATE user SET userEmail = '"+ userEmail +"' WHERE userId = '"+req.session.user+"' ";
     var query3 = "UPDATE user SET userPhone = '"+ userPhone +"' WHERE userId = '"+req.session.user+"' ";
     var s1=false, s2=false, s3=false;
-    sqlExecute.mysqlConnect(query,function(err, result){
+    sqlExecute.mysqlConnect(query,{},function(err, result){
         if (err) throw err;
         s1=true;
     });
-    sqlExecute.mysqlConnect(query2,function(err, result){
+    sqlExecute.mysqlConnect(query2,{},function(err, result){
         if (err) throw err;
         s2=true;
     });
-    sqlExecute.mysqlConnect(query3,function(err, result){
+    sqlExecute.mysqlConnect(query3,{},function(err, result){
         if (err) throw err;
         s3=true;
     });

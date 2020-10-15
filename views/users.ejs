@@ -197,6 +197,7 @@
 
 <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="/javascripts/common.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.2/js/bootstrapValidator.min.js"></script>
 <script>
     $(function() {
@@ -333,7 +334,7 @@
         //选项卡切换
         $('#myTab li:eq(1)a').tab('show');
         // 获取用户资料
-        $.get('/getProfile',function ( res) {
+        $.get(hostUrl + '/getProfile',function ( res) {
                 if(res.code == 200){
                     console.log(res.data);
                     headImg = res.data.headImg;
@@ -352,7 +353,7 @@
             }
         );
         // 获取用户资料
-        $.get('/getAccount',function ( res) {
+        $.get(hostUrl + '/getAccount',function ( res) {
                 if(res.code == 200){
                     console.log(res.data);
                     inputNickName = res.data.nickName;

@@ -15,7 +15,7 @@
     <div class="row">
         <div class="col-sm-12 book">
             <div class="bookImg">
-                <img class="img-thumbnail" alt="封面" id="bookImg" src='/images/bookImg/<%= userInfo.bookId %>.jpg' style="width: 110px; height: 120px;">
+                <img class="img-thumbnail" alt="封面" id="bookImg" src='<%= userInfo.bookImg %>' style="width: 110px; height: 120px;">
             </div>
             <div class="block_txt">
                 <p><a href='/bookInfo/<%= userInfo.bookId %>'><%= userInfo.bookName %></a></p>
@@ -71,11 +71,21 @@
         var dateTime = formateDate(time);
         // dateTime.format('yyyy-MM-dd HH:mm:ss');
         $('.updateTime').text(dateTime);
+        addBookVisits();
         checkShelf();
         getCatCount();
         latestCatalog();
         getCatalog(catalogIndex);
     })
+    //每访问一次本页面增加一次点击数
+    function addBookVisits(){
+        $.post(hostUrl + '/bookInfo/addBookVisits', {bookId: bookId},
+            function (result) {
+                if (result.success) {
+                }else{
+                }
+            })
+    }
     function formateDate(date) {
         var date = new Date(date);
         var y = date.getFullYear();
@@ -95,7 +105,7 @@
     function getDownload() {
         $('.btnDwd').prop('disabled', true);
         var params = {filename: filename, bookId: bookId};
-        postExcelFile(params, "http://192.168.0.109:3000/getDownload");
+        postExcelFile(params, hostUrl + "/getDownload");
         $('.btnDwd').prop('disabled', false);
     }
     function postExcelFile(params, url) { //params是post请求需要的参数，url是请求url地址
@@ -118,7 +128,7 @@
 
     // 检查本书是否已在书架中
     function checkShelf() {
-        $.post('http://192.168.0.109:3000/bookInfo/checkShelf', {userId: userId, bookId: bookId},
+        $.post(hostUrl + '/bookInfo/checkShelf', {userId: userId, bookId: bookId},
             function (result) {
                 if (result.success) {
                     $('#addToShelf').text('已在书架中');
@@ -130,7 +140,7 @@
     //添加本书到书架
     function addToShelf(){
         $('#addToShelf').prop('disabled', true);
-        $.post('http://192.168.0.109:3000/bookInfo/addToShelf', {userId: userId, bookId: bookId},
+        $.post(hostUrl + '/bookInfo/addToShelf', {userId: userId, bookId: bookId},
             function (result) {
                 if (result.success) {
                     alert("添加成功");
@@ -144,7 +154,7 @@
     }
     //获取分页数量
     function getCatCount() {
-        $.post('http://192.168.0.109:3000/bookInfo/getCatCount', {bookId: bookId},
+        $.post(hostUrl + '/bookInfo/getCatCount', {bookId: bookId},
             function (result) {
                 if (result.success) {
                     var html = '';
@@ -167,7 +177,7 @@
             alert('请求错误');
             return;
         }
-        $.post('http://192.168.0.109:3000/bookInfo/latestCatalog', {bookId: bookId},
+        $.post(hostUrl + '/bookInfo/latestCatalog', {bookId: bookId},
             function (result) {
                 if (result.success) {
                     var html = '';
@@ -190,7 +200,7 @@
             alert('请求错误');
             return;
         }
-        $.post('http://192.168.0.109:3000/bookInfo/getCatalog', {bookId: bookId, catalogIndex: catalogIndex},
+        $.post(hostUrl + '/bookInfo/getCatalog', {bookId: bookId, catalogIndex: catalogIndex},
             function (result) {
                 if (result.success) {
                     var html = '';

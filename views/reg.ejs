@@ -130,6 +130,7 @@
     </div>
     <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
     <script type="text/javascript" src="/javascripts/md5.js"></script>
+    <script src="/javascripts/common.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.2/js/bootstrapValidator.min.js"></script>
 <script>
@@ -285,7 +286,7 @@
                 alert("用户名和邮箱不能为空！");
                 return;
             } else {
-                $.post('http://192.168.0.109:3000/sendEmail',{userName: name,userEmail: email},
+                $.post(hostUrl + '/sendEmail',{userName: name,userEmail: email},
                     function (result) {
                         console.log(result);
                         if(result.success){
@@ -323,7 +324,7 @@
             alert("两次输入密码不一致");
             return;
         }
-        $.post('http://192.168.0.109:3000/reg/checkState',{name: name, email: email, phone: phone},
+        $.post(hostUrl + '/reg/checkState',{name: name, email: email, phone: phone},
             function (result) {
                 //如果用户名/邮箱/电话号码已存在
                 console.log(result);
@@ -334,7 +335,7 @@
             });
         //如果用户名/邮箱/电话号码不存在
         if(!state){
-            $.post('http://192.168.0.109:3000/reg',{name: name, email: email, phone: phone, pwd: pwd},
+            $.post(hostUrl + '/reg',{name: name, email: email, phone: phone, pwd: pwd},
                 function (result) {
                     console.log(result);
                     if(result.success){

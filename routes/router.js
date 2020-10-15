@@ -57,7 +57,6 @@ router.post('/uploadFile', upload.single('myfile'), user.uploadFile);
 
 router.get('/bookSort', bookSort.rootHTML);
 router.post('/bookSort', bookSort.getSortBook);
-router.post('/searchBook', bookSort.searchBook);
 
 router.get('/bookRank/:id', bookRank.getBookRank);
 router.post('/bookRank/getTopList', bookRank.getTopList);
@@ -73,6 +72,7 @@ router.post('/bookInfo/getCatCount', bookInfo.getCatCount);
 router.post('/bookInfo/latestCatalog', bookInfo.latestCatalog);
 router.post('/bookInfo/checkShelf', bookInfo.checkShelf);
 router.post('/bookInfo/addToShelf', bookInfo.addToShelf);
+router.post('/bookInfo/addBookVisits', bookInfo.addBookVisits);
 router.post('/getDownload', bookInfo.getDownload);
 
 router.get('/search/:keyWord', bookSearch.getSearch);

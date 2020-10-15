@@ -104,6 +104,7 @@
 
 <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://cdn.staticfile.org/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script src="/javascripts/common.js"></script>
 <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.2/js/bootstrapValidator.min.js"></script>
 <script src="/javascripts/jquery.base64.js"></script>
@@ -269,13 +270,13 @@
                     alert("验证码错误！");
                     return;
                 }
-                $.post('http://192.168.0.109:3000/login',
+                $.post(hostUrl + '/login',
                     {name: name,pwd: pwd},
                     function (result) {
                         alert(result.msg);
                         if(result.success){
                             saveAccount();
-                            window.location.href = "http://192.168.0.109:3000/";
+                            window.location.href = hostUrl;
                             console.log(result.data);
                         }else{
                             // 登陆失败清除密码刷新图片

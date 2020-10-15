@@ -14,6 +14,7 @@
 <div class="header">
     <ul>
         <li class="active"><a href="/">首页</a></li>
+        <li><a href="/index">测试页</a></li>
         <li><a href="/bookSort">分类</a></li>
         <li><a href="/bookRank/1">排行</a></li>
         <li><a href="/bookState/1">全本</a></li>
@@ -60,8 +61,8 @@
 <%- include component/footer.ejs %>
 <script>
     var httpUrl=[
-        'http://192.168.0.109:3000/rank/getCount',
-        'http://192.168.0.109:3000/home/recommend',
+        hostUrl + '/rank/getCount',
+        hostUrl + '/home/recommend',
     ];
     $(
         function () {
@@ -76,10 +77,8 @@
             function (result) {
                 if (result.success) {
                     var html = '';
-                    console.log(result.data);
-                    console.log(result.data[0].bookImg);
                     html += '<div class="bookInfo_homePage">'
-                    html += '<div class="bookImg_homePage"><img class="img-thumbnail" alt="封面" id="bookImg" src=/images/bookImg/'+result.data[0].bookId+'.jpg></div>';
+                    html += '<div class="bookImg_homePage"><img class="img-thumbnail" alt="封面" id="bookImg" src="'+result.data[0].bookImg+'"></div>';
                     html += '<div class="bookDetail_homePage">' +
                         '<p><a href="/bookInfo/'+ result.data[0].bookId +'">'+ result.data[0].bookName +'</a></p>' +
                         '<p>作者：<a href="/author/'+ result.data[0].authorName +'">'+result.data[0].authorName+'</a></p>' +

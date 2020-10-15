@@ -101,7 +101,7 @@
         typeId = bookTypeId; pIndex= pageIndex;
         var data={bookTypeId: bookTypeId, pageIndex: pageIndex, pageSize: pageSize};
         // getSortBook
-        $.post('http://192.168.0.109:3000/bookSort', data,
+        $.post(hostUrl + '/bookSort', data,
             function (result) {
                 if (result.success) {
                     var html = '';
@@ -147,6 +147,8 @@
             case 13: $('.intro').text('军事小说');break;
             case 14: $('.intro').text('校园小说');break;
             case 15: $('.intro').text('官场小说');break;
+            case 16: $('.intro').text('商战小说');break;
+            case 17: $('.intro').text('职场小说');break;
         }
     }
     $('#firstPage').click(

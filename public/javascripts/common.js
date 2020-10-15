@@ -1,4 +1,5 @@
 
+var hostUrl = 'http://192.168.0.109:3000';
 // $(".header ul li").click(function (e){
 //     // alert('asd');
 //     $(this).siblings('li').removeClass("active");

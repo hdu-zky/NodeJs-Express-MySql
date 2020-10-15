@@ -85,7 +85,7 @@ exports.register = function(req,res){
     var email = req.body.email;
     var phone = req.body.phone;
     var query = 'insert into user(nickName, passWord, userEmail, userPhone) values("'+name+'","'+pwd+'","'+email+'","'+phone+'")';
-    sqlExecute.mysqlConnect(query,function(err,result){
+    sqlExecute.mysqlConnect(query,{},function(err,result){
         console.log(err);
         if(err){
             res.send({success: true, msg: "注册失败"});
@@ -102,7 +102,7 @@ exports.checkState = function(req, res){
     var email = req.body.email;
     var phone = req.body.phone;
     var checkState = 'select * from user where nickName ="'+name+'" or  userEmail ="'+email+'" or  userPhone ="'+phone+'"';
-    sqlExecute.mysqlConnect(checkState,function(err,result){
+    sqlExecute.mysqlConnect(checkState,{},function(err,result){
         if(err) throw err;
         if(result.length >0){
             res.send({success: true, msg: "用户名/邮箱/电话号码已存在"});
@@ -117,7 +117,7 @@ exports.checkState = function(req, res){
  */
 exports.userName = function(req, res, next) {
     var sql = "select nickName from user where nickName = '"+req.body.name+"' ";
-    sqlExecute.mysqlConnect(sql,function(err, result){
+    sqlExecute.mysqlConnect(sql,{},function(err, result){
         if (err) throw err;
         if(result.length != 0){
             res.json({
@@ -132,7 +132,7 @@ exports.userName = function(req, res, next) {
 };
 exports.userEmail = function(req, res, next) {
     var sql = "select userEmail from user where userEmail = '"+req.body.email+"' ";
-    sqlExecute.mysqlConnect(sql,function(err, result){
+    sqlExecute.mysqlConnect(sql,{},function(err, result){
         if (err) throw err;
         if(result.length != 0){
             res.json({
@@ -147,7 +147,7 @@ exports.userEmail = function(req, res, next) {
 };
 exports.userPhone = function(req, res, next) {
     var sql = "select userPhone from user where userPhone = '"+req.body.phone+"' ";
-    sqlExecute.mysqlConnect(sql,function(err, result){
+    sqlExecute.mysqlConnect(sql,{},function(err, result){
         if (err) throw err;
         if(result.length != 0){
             res.json({
