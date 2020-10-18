@@ -236,6 +236,12 @@ body {
     font-size: 16px;
     line-height: 1.5;
 }
+#latestCatalog{
+    min-height: 60px;
+}
+#catalog{
+    min-height: 160px;
+}
 ul{
     padding-left: 0px;
 }
@@ -292,6 +298,13 @@ chapter{
     display: inline-block;
     float: left;
     margin-right: 8px;
+}
+.txtBgColor{
+    background: #F8F0DD;
+}
+#content{
+    min-height: 380px;
+    font-size: 18px;
 }
 .footer {
     height: 100px;

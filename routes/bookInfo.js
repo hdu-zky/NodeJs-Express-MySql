@@ -22,7 +22,7 @@ exports.bookInfoHTML = function (req, res) {
         " book inner join bookinfo" +
         " on book.bookId = bookinfo.bookId and book.bookId  ='"+ bookId +"'";
     var pageCount  = getCount(bookId);
-    console.log(pageCount);
+    // console.log(pageCount);
     sqlExecute.mysqlConnect(query,{},function(err, result){
         if (err) throw err;
         //如果检索到数据
@@ -49,7 +49,7 @@ function getCount(bookId){
     var pageCount=0;
     var query = "select COUNT(bookId) as count from bookchapter" +
         " where bookId  ='"+ bookId +"'";
-    console.log(sqlExecute.hostUrl);
+    // console.log(sqlExecute.hostUrl);
     sqlExecute.mysqlConnect(
         query,
         {},
@@ -146,6 +146,11 @@ function addBookDownload(bookId) {
 exports.checkShelf = function(req, res, next) {
     var userId = req.body.userId;
     var bookId = req.body.bookId;
+    //如果会话不存在则需要登录则跳转登陆界面
+    if(!req.session.user){
+        res.send({success: false, msg: '当前尚未登录'});
+        return;
+    }
     var check = "select id from bookshelf where userId='"+ userId +"' and bookId= '"+ bookId +"' ";
     sqlExecute.mysqlConnect(check, {},function(err, result){
         if (err) {
@@ -182,6 +187,15 @@ exports.checkShelf = function(req, res, next) {
 exports.addToShelf = function(req, res, next) {
     var userId = req.body.userId;
     var bookId = req.body.bookId;
+    //如果会话不存在则需要登录则跳转登陆界面
+    if(!req.session.user){
+        res.send({success: false, msg: '当前尚未登录，去登录？'});
+        return;
+    }
+    if(!userId || !bookId){
+        res.send({success: false, msg: '当前尚未登录或未选中书籍，去登录？'});
+        return;
+    }
     var query = "INSERT INTO bookshelf (userId, bookId) VALUES ('"+ userId +"', '"+ bookId +"')";
     sqlExecute.mysqlConnect(query, {},function(err, result){
         if (err) {
@@ -270,7 +284,7 @@ exports.getCatalog=function (req, res, next) {
     //分页目录的页序号
     var catalogIndex = req.body.catalogIndex;
     var query = "select bookId, bookChapterId, chapterTitle from bookchapter" +
-        " where bookId  ='"+ bookId +"'";
+        " where bookId  ='"+ bookId +"' order by bookChapterId";
     sqlExecute.mysqlConnect(query,{},function(err, result){
         if (err) throw err;
         //如果检索到数据

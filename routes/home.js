@@ -7,7 +7,7 @@ const sqlExecute = require('./sqlExecute');
  * @apiSuccess {String} success 成功返回信息.
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
- *     bookInfo.html
+ *     home.html
  * @apiErrorExample Error-Response:
  *     HTTP/1.1 500 server error
  * */

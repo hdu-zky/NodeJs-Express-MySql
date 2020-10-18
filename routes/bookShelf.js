@@ -1,6 +1,10 @@
 var sqlExecute = require('./sqlExecute');
 
 exports.bookShelfHTML = function (req, res) {
+    //如果会话不存在则需要登录则跳转登陆界面
+    if(!req.session.user){
+        res.redirect('/login');
+    }
     var userId = req.session.user;
     var query = "select bookinfo.bookId, bookinfo.bookImg, bookinfo.bookName, bookinfo.authorName, bookinfo.bookTypeName," +
         " bookinfo.updateTime, bookinfo.status, bookinfo.latestChapter, bookinfo.latestChTitle" +
@@ -50,6 +54,10 @@ function formateDate(date) {
  *     }
  * */
 exports.removeBook=function (req, res, next) {
+    //如果会话不存在则需要登录则跳转登陆界面
+    if(!req.session.user){
+        res.redirect('/login');
+    }
     var userId = req.body.userId;
     var bookId = req.body.bookId;
     var query = "delete from bookshelf where userId='"+ userId +"' and bookId= '"+ bookId +"' ";
@@ -67,6 +75,10 @@ exports.removeBook=function (req, res, next) {
  * 收藏量自减少1
  * */
 function reduceBookCollect(bookId) {
+    //如果会话不存在则需要登录则跳转登陆界面
+    if(!req.session.user){
+        res.redirect('/login');
+    }
     if(!bookId) return 0;
     var query = "Update bookinfo Set bookCollect = bookCollect - 1 where bookId = '"+ bookId +"'";
     sqlExecute.mysqlConnect(query, {},function(err, result){

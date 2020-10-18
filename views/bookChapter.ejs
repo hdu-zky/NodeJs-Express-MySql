@@ -7,10 +7,10 @@
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/stylesheets/common.css">
 </head>
-<body style="background: #F8F0DD;">
+<body class="txtBgColor">
 <div class="container">
     <h3 class="text-center title"><%= bookTxt.chapterTitle %></h3>
-    <div id="content" style="font-size: 18px;"></div>
+    <div id="content"></div>
     <div class="row selectPage">
         <div class="col-sm-12 col-xs-12">
             <button type="button" class="btn btn-primary prevPage" onclick="getPage(-1)">上一章</button>
@@ -27,7 +27,6 @@
     //获取当前章节号
     var bookId = '<%= bookTxt.bookId%>';
     var chapterId = parseInt('<%= bookTxt.bookChapterId%>');
-    var chapterContentUrl = '<%= bookTxt.chapterContentUrl%>';
     var success = '<%= bookTxt.success %>';
     checkState();
     chapterContent();
@@ -36,17 +35,16 @@
         if(success != '200'){
             return;
         }
-        console.log(chapterContentUrl);
-        $.post(hostUrl + '/bookChapter/getBookContent', {chapterContentUrl: chapterContentUrl},
+        $.post(hostUrl + '/bookChapter/getBookContent', {bookId: bookId, chapterId: chapterId},
             function (result) {
                 if (result.success) {
                     var tmp = result.bookContent;
                     var html='';
                     html += '<p>'+tmp;
                     // 文本的换行替换成p标签
-                    html = html.replace(new RegExp('\n','g'), '</p><p>');
+                    // html = html.replace(new RegExp('\n','g'), '</p><p>');
                     html += '</p>';
-                    document.getElementById('content').innerHTML += '<p>&nbsp;&nbsp;&nbsp;&nbsp;';
+                    // document.getElementById('content').innerHTML += '<p>&nbsp;&nbsp;&nbsp;&nbsp;';
                     document.getElementById('content').innerHTML = html;
                 }
             }

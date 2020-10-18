@@ -36,6 +36,10 @@ exports.getProfile = function(req, res, next){
 };
 
 exports.uploadFile = function(req, res, next){
+    //如果会话不存在则需要登录则跳转登陆界面
+    if(!req.session.user){
+        res.redirect('/login');
+    }
     var headImg = "/uploads/"+req.file.filename;
     if(!req.session.rolename || !req.session.user){
         res.status(500).send({

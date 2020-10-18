@@ -244,77 +244,71 @@
         }
         return vCode;
     }
-    $(function() {
-        $('#login').click(
-            function () {
-                if( !$.cookie('login_error')){
-                    $.cookie('login_error', '0');
-                }
-                //输错三次及以上账号密码
-                if($.cookie('login_error')!= null && parseInt( $.cookie('login_error') ) >=3 ){
+    function login () {
+        if( !$.cookie('login_error')){
+            $.cookie('login_error', '0');
+        }
+        //输错三次及以上账号密码
+        if($.cookie('login_error')!= null && parseInt( $.cookie('login_error') ) >=3 ){
+            verifyCode =drawPic();
+            $('#verifyCode').show();
+        }
+        var name = $('#inputName').val();
+        var pwd = $('#inputPwd').val();
+        console.log('用户名 '+ name +'密码 '+ pwd);
+        if (pwd.length == 0 || name.length == 0) {
+            alert("用户名和密码不能为空！");
+            return;
+        }
+        if($('#inputCode').val()!='' && $('#inputCode').val().toLowerCase() ==''){
+            alert("验证码不能为空！");
+            return;
+        }
+        if($('#inputCode').val()!='' && $('#inputCode').val().toLowerCase() != verifyCode.toLowerCase()){
+            alert("验证码错误！");
+            return;
+        }
+        $.post(hostUrl + '/login',
+            {name: name,pwd: pwd},
+            function (result) {
+                alert(result.msg);
+                if(result.success){
+                    saveAccount();
+                    window.location.href = hostUrl;
+                    console.log(result.data);
+                }else{
+                    // 登陆失败清除密码刷新图片
+                    $('#inputPwd').val('');
                     verifyCode =drawPic();
-                    $('#verifyCode').show();
                 }
-                var name = $('#inputName').val();
-                var pwd = $('#inputPwd').val();
-                console.log('用户名 '+ name +'密码 '+ pwd);
-                if (pwd.length == 0 || name.length == 0) {
-                    alert("用户名和密码不能为空！");
-                    return;
-                }
-                if($('#inputCode').val()!='' && $('#inputCode').val().toLowerCase() ==''){
-                    alert("验证码不能为空！");
-                    return;
-                }
-                if($('#inputCode').val()!='' && $('#inputCode').val().toLowerCase() != verifyCode.toLowerCase()){
-                    alert("验证码错误！");
-                    return;
-                }
-                $.post(hostUrl + '/login',
-                    {name: name,pwd: pwd},
-                    function (result) {
-                        alert(result.msg);
-                        if(result.success){
-                            saveAccount();
-                            window.location.href = hostUrl;
-                            console.log(result.data);
-                        }else{
-                            // 登陆失败清除密码刷新图片
-                            $('#inputPwd').val('');
-                            verifyCode =drawPic();
-                        }
-                        // $('#content').text(JSON.stringify(result));
-                    }
-                );
+                // $('#content').text(JSON.stringify(result));
             }
         );
-    });
-    $(document).ready(function () {
+    }
+    $('#login').click(
+        function (){
+            login();
+        }
+    );
+    function autoSign () {
         //cookie里保存账密项为真则展示相应数据
         if ($.cookie("saveAcc") == "true") {
             $("#saveAcc").prop("checked", true);
-            $("#inputName").val($.cookie("username"));
-            $("#inputPwd").val($.base64.decode( $.cookie("password") ));
             // 自动登录为真
             if($.cookie("autoSign") == "true"){
+                alert('das');
                 $("#autoSign").prop("checked", true);
-                $("#login").click();
+                // window.location.href = '/';
             }
         }
-    });
+    }
     // 保存账号密码到cookie以自动登录
     function saveAccount() {
         if ($("#saveAcc").prop("checked")) {
-            var str_username = $("#inputName").val();
-            var str_password = $("#inputPwd").val();
             $.cookie("saveAcc", "true", { expires: 7 }); //存储一个带7天期限的cookie
-            $.cookie("username", str_username, { expires: 7 });
-            $.cookie("password", $.base64.encode(str_password), { expires: 7 });
         }
         else {
             $.cookie("saveAcc", "false", { expire: -1 });
-            $.cookie("username", "", { expires: -1 });
-            $.cookie("password", "", { expires: -1 });
         }
         if($("#autoSign").prop("checked")){
             $.cookie("autoSign", "true", { expires: 7 }); //存储一个带7天期限的cookie

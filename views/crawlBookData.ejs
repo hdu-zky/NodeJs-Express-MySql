@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title><%= title %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/stylesheets/common.css">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-xs-12">
+            <button type="button" class="btn btn-primary startCrawl col-sm-4 col-xs-4" onclick="crawlBookData()">开始爬取</button>
+            <p id="msg" class="text-danger"></p>
+        </div>
+    </div>
+</div>
+</body>
+<%include component/footer.ejs%>
+<script>
+    function crawlBookData(){
+        $('.startCrawl').prop('disabled', true);
+        $.post(hostUrl+'/crawlBookData', function (res) {
+            $('#msg').removeClass();
+            if(res.success){
+                $('#msg').addClass('text-success');
+                $('.startCrawl').prop('disabled', false);
+            }else{
+                $('#msg').addClass('text-danger');
+            }
+            $('#msg').text(res.msg);
+        })
+    }
+</script>
+</html>

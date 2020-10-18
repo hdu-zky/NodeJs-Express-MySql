@@ -147,7 +147,10 @@
                     $('#addToShelf').text('已在书架中');
                     $('#addToShelf').prop('disabled', 'disabled');
                 }else{
-                    alert(result.msg);
+                    let ans = confirm(result.msg);
+                    if(ans){
+                        window.location.href = '/login';
+                    }
                 }
             })
         $('#addToShelf').prop('disabled', false);

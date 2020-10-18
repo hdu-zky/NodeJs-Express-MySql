@@ -6,7 +6,7 @@ var winston =require('winston');
 var expressWinston =require('express-winston');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+// var bodyParser = require('body-parser');
 var router = require('./routes/router.js');
 var app = express();
 
@@ -28,20 +28,25 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));//访问 public 目录中的所有文件了
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
+// app.use(bodyparser.json()); // 使用bodyparder中间件，
+// app.use(bodyparser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(session({
-    secret: "hello world",
+    secret: "223412",
+    name: 'demo-1',
     resave: false,
     saveUninitialized: true,
     cookie: {maxAge: 10 * 60 * 60 * 1000}
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-/* 中间件,判断用户是否登录 */
+/* 中间件,判断用户是否需要登录 */
 app.use(function (req, res, next) {
-    if ((req.url !== '/login'  && req.session.user === undefined) && req.url!=='/reg'&& req.url!=='/sendEmail'
-        && req.url!=='/userName'&& req.url!=='/userEmail'&& req.url!=='/userPhone' && req.url !== '/index') {
+    // if ((req.url !== '/login'  && req.session.user === undefined) && req.url!=='/reg'&& req.url!=='/sendEmail'
+    //     && req.url!=='/userName'&& req.url!=='/userEmail'&& req.url!=='/userPhone' && req.url !== '/index') {
+    //     res.redirect('/login');
+    if((req.url === '/user' && req.session.user === undefined)||(req.url === '/bookShelf' && req.session.user === undefined) ){
         res.redirect('/login');
         return;
     }

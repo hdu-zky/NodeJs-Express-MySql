@@ -3,6 +3,7 @@ const multer = require("multer");
 var router = express.Router();
 var home = require('../routes/home');
 var index = require('../routes/index');
+var crawlBookData = require('../routes/crawlBookData');
 var user = require('../routes/users');
 var login = require('../routes/login');
 var reg = require('../routes/reg');
@@ -29,10 +30,11 @@ var upload = multer({
     storage: storage
 });
 
-/* login */
 router.get('/', home.home);
 router.post('/home/recommend', home.recommend);
 router.get('/index', index.index);
+router.get('/crawlBookData', crawlBookData.getCrawlPage);
+router.post('/crawlBookData', crawlBookData.crawlBookData);
 // router.get('/favicon.ico', home.favicon);
 
 /* register */
@@ -44,7 +46,9 @@ router.post('/userName', reg.userName);
 router.post('/userEmail', reg.userEmail);
 router.post('/userPhone', reg.userPhone);
 
+/* login */
 router.get('/login', login.Glogin);
+router.post('/autoLogin', login.autoLogin);
 router.post('/login', login.Plogin);
 router.get('/logout', login.logout);
 

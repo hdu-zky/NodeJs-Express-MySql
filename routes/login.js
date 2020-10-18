@@ -49,25 +49,37 @@ exports.Plogin = function(req, res, next){
     });
 };
 exports.Glogin = function (req, res) {
-    // if (req.session.user && req.url != '/login') {
-    //     res.redirect('/');
+    //
+    // if (req.session.user&& req.url != '/login') {
+    //     res.redirect(req.originalUrl);
     // } else {
         res.render('login');
     // }
 };
-
-// exports.index = function (req, res) {
-//     res.redirect('/login');
-// };
+exports.autoLogin = function (req, res) {
+    //
+    console.log(req.url);
+    console.log(req.originalUrl);
+    console.log(req.baseUrl);
+    console.log(req.session.user);
+    if (req.session.user) {
+        console.log(req.url);
+        res.redirect(req.url);
+    } else {
+        req.session.destroy();
+        res.render('login');
+    }
+};
 
 exports.logout = function (req, res) {
-    res.clearCookie('token');
-    res.clearCookie('_user');
-    res.clearCookie('saveAcc');
-    res.clearCookie('autoSign');
-    res.clearCookie('username');
-    res.clearCookie('password');
-    req.session.destroy();
+    //如果会话存在，则销毁会话并重定向至登录界面
+    if(req.session.user){
+        res.clearCookie('token');
+        res.clearCookie('_user');
+        res.clearCookie('saveAcc');
+        res.clearCookie('autoSign');
+        req.session.destroy();
+    }
     res.redirect('/login');
 };
 
