@@ -60,15 +60,15 @@ exports.getBookRank = function (req, res) {
  *       data: [{}]
  *     }
  * */
-exports.getTopList=function(req, res, next){
+exports.getTopList=function(req, res){
     var selectType = req.body.selectType;
     var pageIndex = req.body.pageIndex;
-    var query = "select bookId, bookName, authorName, bookTypeName, bookVisits from bookinfo" +
-        " order by bookVisits desc";
-    var query2 = "select bookId, bookName, authorName, bookTypeName, bookVisits from bookinfo" +
-        " order by bookCollect desc";
-    var query3 = "select bookId, bookName, authorName, bookTypeName, bookVisits from bookinfo" +
-        " order by bookDownload desc";
+    var query = `select bookId, bookName, authorName, bookTypeName, bookVisits from bookinfo
+        order by bookVisits desc limit ${pageIndex*20}, 20`;
+    var query2 = `select bookId, bookName, authorName, bookTypeName, bookVisits from bookinfo
+        order by bookCollect desc limit ${pageIndex*20}, 20`;
+    var query3 = `select bookId, bookName, authorName, bookTypeName, bookVisits from bookinfo
+        order by bookDownload desc limit ${pageIndex*20}, 20`;
     var sql='';
     switch (selectType) {
         case '1': sql = query;break;
@@ -80,12 +80,7 @@ exports.getTopList=function(req, res, next){
         if (err) throw err;
         //如果检索到数据
         if(result.length>0){
-            var i=0, j=0;
-            var catalog=[];
-            for(i= pageIndex*20; i<=(pageIndex*20+19)&&i<result.length; i++){
-                catalog[j++] = result[i];
-            }
-            res.send({success: true, data: catalog});
+            res.send({success: true, data: result});
         }else{
             res.send({success: true, data: {}});
         }
@@ -111,7 +106,7 @@ exports.getTopList=function(req, res, next){
  *       data: 0
  *     }
  * */
-exports.getCount=function (req, res, next) {
+exports.getCount=function (req, res) {
     // var bookId = req.body.bookId;
     var query = "select COUNT(bookId) as count from bookinfo";
     sqlExecute.mysqlConnect(query, {},function(err, result){

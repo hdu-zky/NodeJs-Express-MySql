@@ -4,7 +4,8 @@
     <meta charset="utf-8">
     <title>笔趣阁小说阅读</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
     <link rel="stylesheet" href="/stylesheets/common.css">
 </head>
 <body>
@@ -23,10 +24,10 @@
 <%include component/search.ejs%>
 <div class="container">
     <div class="row stateType">
-        <ul class="col-sm-12">
-            <input class="btn btn-default col-sm-4 col-xs-4 active" type="button" value="最新更新" onclick="getTopList(1, 0)">
-            <input class="btn btn-default col-sm-4 col-xs-4" type="button" value="最新入库" onclick="getTopList(2, 0)">
-            <input class="btn btn-default col-sm-4 col-xs-4" type="button" value="完结全本" onclick="getTopList(3, 0)">
+        <ul class="col-sm-12" id="myTab">
+            <input class="btn btn-default col-sm-4 col-xs-4 latestUpdate active" type="button" value="最新更新" onclick="getTopList(1, 0)">
+            <input class="btn btn-default col-sm-4 col-xs-4 latestCreate" type="button" value="最新入库" onclick="getTopList(2, 0)">
+            <input class="btn btn-default col-sm-4 col-xs-4 finishedBook" type="button" value="完结全本" onclick="getTopList(3, 0)">
         </ul>
     </div>
 </div>
@@ -35,25 +36,18 @@
 <div class="container">
     <div class="intro">排行榜</div>
     <div class="row">
-        <ul class="col-sm-12" id="bookList">
-
-        </ul>
+        <ul class="col-sm-12" id="bookList"></ul>
     </div>
 </div>
 
 <div class="container">
     <div class="row">
         <div class="col-sm-12">
-            <!--<button  class="btn btn-primary selectBtn" id="firstPage">首页</button>-->
             <button  class="btn btn-primary selectBtn" id="prevPage" onclick="getPage(-1)">上一页</button>
             <select  class="selectIndex" id="selectIndex" onchange="getList()" style="color: #333333">
+                <option value="0">第1/20页</option>
             </select>
             <button  class="btn btn-primary selectBtn" id="nextPage" onclick="getPage(1)">下一页</button>
-            <!--<button  class="btn btn-primary selectBtn" id="lastPage">尾页</button>-->
-            <!--<label>-->
-            <!--(第<span id="pageIndex"></span>/<span id="pageCount"></span>页)-->
-            <!--当前<span id="pageSize"></span>条/页-->
-            <!--</label>-->
         </div>
         <div class=" col-sm-12" style="margin-top: 15px">
             <div class="input-group form-group">
@@ -68,33 +62,38 @@
 </div>
 <%- include component/footer.ejs %>
 <script>
-    var selectType = '<%= userInfo.typeId%>';
-    var pageIndex = 0;
-    var pageCount = '<%= userInfo.pageCount%>';
-    var finishCount = 0;
-    var httpUrl=[
+    let selectType = '<%= userInfo.typeId%>';
+    let pageIndex = 0;// 目录分页序号
+    let pageCount = '<%= userInfo.pageCount%>';// 目录总页数
+    let finishCount = 0;// 完结页面目录总页数
+    const httpUrl=[
         hostUrl + '/bookState/getCount',
         hostUrl + '/bookState/getTopList',
     ];
-    $('.stateType input').click(function () {
+    $(function () {
+        switch (selectType) {
+            case '1': $('.latestUpdate').click();break;
+            case '2': $('.latestCreate').click();break;
+            case '3': $('.finishedBook').click();break;
+            default: $('.latestUpdate').click();break;
+        }
+    });
+    $('#myTab input').click(function () {
         $(this).siblings('input').removeClass('active');
         $(this).addClass('active');
-    })
-    // getCount(1);
-    getTopList(1, 0);
+    });
     //获取分页数量rank
     function getCount(selectType) {
         $.post(httpUrl[0],{selectType: selectType},
             function (result) {
                 if (result.success) {
-                    console.log('getcount');
                     if(selectType ==3){
                         finishCount = result.data;
                     }else{
                         pageCount= result.data;
                     }
-                    console.log(selectType+' '+ pageCount+ ' '+result.data);
-                    var html = '';
+                    // console.log('getCount '+selectType+' '+ pageCount+ ' '+result.data);
+                    let html = '';
                     html+= '<option value="0" selected="selected">第 1/'+ result.data +' 页</option>';
                     for (var i = 1; i < result.data; i++) {
                         var index = parseInt(i)+1;
@@ -107,7 +106,8 @@
     }
     //上一页或下一页
     function getPage(delta){
-        var index = parseInt(pageIndex) + parseInt(delta);
+        let index = parseInt(pageIndex) + parseInt(delta);
+        // console.log('getPage', pageIndex, index);
         //如果查找目录页面超过范围
         if(index<0 || (index>=pageCount && selectType != 3) || (index>=finishCount && selectType ==3)){
             alert('查找页面超出范围');
@@ -120,7 +120,8 @@
     }
     //获取分页列表
     function getList() {
-        var index = $('#selectIndex').children('option:selected').val();
+        let index = $('#selectIndex').children('option:selected').val();
+        // console.log('getList', pageIndex, index);
         if(index == pageIndex){
             return;
         }
@@ -128,16 +129,30 @@
     }
     // 获得总榜
     function getTopList(type, index){
+        //如果选择了一个新的展示类型则重绘选择框
+        if( selectType !== type){
+            getCount(type);
+        }else if( selectType === type && pageIndex === index){
+            return;
+        }
         selectType = type;
         pageIndex = index;
-        getCount(type);
-        console.log('getTopList');
-        console.log(pageIndex+ ' ' +pageCount);
+        $(".selectIndex").val(index);
+        // console.log('getTopList', pageIndex, index, pageCount);
         switch (selectType) {
-            case '1': $('.intro').text('最新更新');break;
-            case '2': $('.intro').text('最新入库');break;
-            case '3': $('.intro').text('完本全本');break;
+            case 1: $('.intro').text('最新更新');break;
+            case 2: $('.intro').text('最新入库');break;
+            case 3: $('.intro').text('完本全本');break;
             default: $('.intro').text('最新更新');break;
+        }
+        function formateDate(date) {
+            var date = new Date(date);
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            m = m > 9 ? m : '0' + m;
+            d = d > 9 ? d : '0' + d;
+            return y + '-' + m + '-' + d;
         }
         $.post(httpUrl[1],{selectType: selectType, pageIndex: pageIndex},
             function (result) {
@@ -149,13 +164,13 @@
                         html += '<a href= "/bookInfo/' + result.data[i].bookId + '" class="blue">'+ result.data[i].bookName +'</a>/';
                         html += '<a href="/author/' + result.data[i].authorName +'">'+ result.data[i].authorName + '</a>';
                         if(selectType ==2){
-                            html += '<span style="float: right">' + result.data[i].createTime + '</span>';
+                            html += '<span style="float: right">' + formateDate(result.data[i].createTime) + '</span>';
                         }else{
-                            html += '<span style="float: right">' + result.data[i].updateTime + '</span>';
+                            html += '<span style="float: right">' + formateDate(result.data[i].updateTime) + '</span>';
                         }
                         html += '</p>';
                     }
-                    document.getElementById('bookList').innerHTML = html;
+                    document.getElementById(`bookList`).innerHTML = html;
                 }
             }
         );
@@ -170,13 +185,9 @@
         getPage($('#searchPageIndex').val()-1-pageIndex);
     }
     function checkState(pageIndex) {
-        var pageNum;
         // 如果在首页且总共只有一页
-        if(selectType == 3){
-            pageNum = finishCount;
-        }else{
-            pageNum = pageCount;
-        }
+        let pageNum= selectType == 3? finishCount: pageCount;
+        // console.log('cc', pageNum, finishCount, pageCount);
         if(pageIndex == 0 && pageIndex == pageNum-1){
             $('#prevPage').prop('disabled',true);
             $('#nextPage').prop('disabled',true);

@@ -4,14 +4,15 @@
     <meta charset="utf-8">
     <title><%= message %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
 </head>
 <body>
 <div class="container">
     <div class="row">
-        <h1 class="text-center"><%= message %></h1>
+        <h1 class="text-center"><%= error.status %>&nbsp;&nbsp;<%= message %></h1>
         <hr>
-        <h2 class="text-center"><%= error.status %></h2>
+        <h2 class="text-center">nginx</h2>
         <!--<pre><%= error.stack %></pre>-->
     </div>
 </div>

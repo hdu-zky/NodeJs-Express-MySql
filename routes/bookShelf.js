@@ -76,9 +76,6 @@ exports.removeBook=function (req, res, next) {
  * */
 function reduceBookCollect(bookId) {
     //如果会话不存在则需要登录则跳转登陆界面
-    if(!req.session.user){
-        res.redirect('/login');
-    }
     if(!bookId) return 0;
     var query = "Update bookinfo Set bookCollect = bookCollect - 1 where bookId = '"+ bookId +"'";
     sqlExecute.mysqlConnect(query, {},function(err, result){

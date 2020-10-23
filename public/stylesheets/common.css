@@ -244,6 +244,7 @@ body {
 }
 ul{
     padding-left: 0px;
+    list-style-type: none;
 }
 chapter{
     display: block;

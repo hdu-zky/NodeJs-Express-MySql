@@ -1,5 +1,4 @@
 var urlEncode = require('urlencode');
-var mysql = require('mysql');
 var sqlExecute = require('./sqlExecute');
 var fs = require("fs");
 
@@ -283,18 +282,13 @@ exports.getCatalog=function (req, res, next) {
     var bookId = req.body.bookId;
     //分页目录的页序号
     var catalogIndex = req.body.catalogIndex;
-    var query = "select bookId, bookChapterId, chapterTitle from bookchapter" +
-        " where bookId  ='"+ bookId +"' order by bookChapterId";
+    var query = `select bookId, bookChapterId, chapterTitle from bookchapter
+        where bookId  = ${bookId} order by bookChapterId limit ${catalogIndex * 20}, 20`;
     sqlExecute.mysqlConnect(query,{},function(err, result){
         if (err) throw err;
         //如果检索到数据
         if(result.length>0){
-            var i=0, j=0;
-            var catalog=[];
-            for(i= catalogIndex*20; i<=(catalogIndex*20+19)&&i<result.length; i++){
-                catalog[j++] = result[i];
-            }
-            res.send({success: true, data: catalog});
+            res.send({success: true, data: result});
         }else{
             res.send({success: true, data: {}});
         }
@@ -361,15 +355,15 @@ exports.latestCatalog=function(req, res, next){
  *     }
  * */
 exports.getCatCount=function (req, res, next) {
-    var bookId = req.body.bookId;
-    var query = "select COUNT(bookId) as count from bookchapter" +
+    const bookId = req.body.bookId;
+    const query = "select COUNT(bookId) as count from bookchapter" +
         " where bookId  ='"+ bookId +"'";
     sqlExecute.mysqlConnect(query,{}, function(err, result){
         if (err) {
             console.log(err);
             res.send({success: false, data: {}});
         }else {//如果检索到数据
-            var pageCount = (result[0].count%20)==0? (result[0].count/20):((result[0].count-result[0].count%20)/20+1);
+            const pageCount = (result[0].count%20)==0? (result[0].count/20):((result[0].count-result[0].count%20)/20+1);
             res.send({success: true, data: pageCount});
         }
     })

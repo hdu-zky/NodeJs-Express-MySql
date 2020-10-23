@@ -1,4 +1,4 @@
-var sqlExecute = require('./sqlExecute');
+const sqlExecute = require('./sqlExecute');
 
 
 /**
@@ -17,9 +17,9 @@ var sqlExecute = require('./sqlExecute');
  *     HTTP/1.1 500 server error
  * */
 exports.getBookState = function (req, res) {
-    var typeId = req.params.id;
-    var query = "select COUNT(bookId) as count from bookinfo";
-    var pageCount;
+    let typeId = req.params.id;
+    let query = "select COUNT(bookId) as count from bookinfo";
+    let pageCount;
     sqlExecute.mysqlConnect(query,{}, function(err, result){
         if (err) throw err;
         pageCount = (result[0].count%20)==0? (result[0].count/20):((result[0].count-result[0].count%20)/20+1);
@@ -64,22 +64,21 @@ exports.getBookState = function (req, res) {
  *     }
  * */
 exports.getTopList=function(req, res, next){
-    var selectType = req.body.selectType;
-    var pageIndex = req.body.pageIndex;
+    let selectType = req.body.selectType;
+    let pageIndex = req.body.pageIndex;
     //最新更新
-    var query = "select book.bookId, book.bookName, bookinfo.authorName, book.updateTime, bookinfo.bookTypeName from" +
-        " book inner join bookinfo" +
-        " on book.bookId = bookinfo.bookId order by book.updateTime desc";
+    let query = `select book.bookId, book.bookName, bookinfo.authorName, book.updateTime, bookinfo.bookTypeName
+        from book inner join bookinfo
+        on book.bookId = bookinfo.bookId order by book.updateTime desc limit ${pageIndex*20}, 20`;
     //最新入库
-    var query2 = "select book.bookId, book.bookName, bookinfo.authorName, book.createTime, bookinfo.bookTypeName from" +
-        " book inner join bookinfo" +
-        " on book.bookId = bookinfo.bookId order by book.createTime desc";
+    let query2 = `select book.bookId, book.bookName, bookinfo.authorName, book.createTime, bookinfo.bookTypeName from
+        book inner join bookinfo
+        on book.bookId = bookinfo.bookId order by book.createTime desc limit ${pageIndex*20}, 20`;
     //完结排行
-    var query3 = "select book.bookId, book.bookName, bookinfo.authorName, book.updateTime, bookinfo.bookTypeName from" +
-        " book inner join bookinfo" +
-        " on book.bookId = bookinfo.bookId and  book.status = 0" +
-        " order by book.updateTime desc";
-    var sql='';
+    let query3 = `select book.bookId, book.bookName, bookinfo.authorName, book.updateTime, bookinfo.bookTypeName from
+        book inner join bookinfo on book.bookId = bookinfo.bookId and  book.status = 0
+        order by book.updateTime desc limit ${pageIndex*20}, 20`;
+    let sql='';
     switch (selectType) {
         case '1': sql = query;break;
         case '2': sql = query2;break;
@@ -90,31 +89,12 @@ exports.getTopList=function(req, res, next){
         if (err) throw err;
         //如果检索到数据
         if(result.length>0){
-            var i=0, j=0;
-            var catalog=[];
-            for(i= pageIndex*20; i<=(pageIndex*20+19)&&i<result.length; i++){
-                catalog[j++] = result[i];
-                if(selectType == 2){
-                    catalog[j-1].createTime = formateDate(result[i].createTime);
-                }else{
-                    catalog[j-1].updateTime = formateDate(result[i].updateTime);
-                }
-            }
-            res.send({success: true, data: catalog});
+            res.send({success: true, data: result});
         }else{
             res.send({success: true, data: {}});
         }
     })
 };
-function formateDate(date) {
-    var date = new Date(date);
-    var y = date.getFullYear();
-    var m = date.getMonth() + 1;
-    var d = date.getDate();
-    m = m > 9 ? m : '0' + m;
-    d = d > 9 ? d : '0' + d;
-    return y + '-' + m + '-' + d;
-}
 
 /**
  * @api {post} /bookState/getCount 获取数据分页总数

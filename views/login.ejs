@@ -8,8 +8,9 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="Cache" content="no-cache">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.2/css/bootstrapValidator.min.css"/>
-    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+	<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/stylesheets/bootstrapValidator.min.css">
+    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
     <title>Document</title>
     <style>
         body{
@@ -102,12 +103,12 @@
     </form>
 </div>
 
-<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
-<script src="https://cdn.staticfile.org/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
-<script src="/javascripts/common.js"></script>
-<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.2/js/bootstrapValidator.min.js"></script>
-<script src="/javascripts/jquery.base64.js"></script>
+<script type="text/javascript" src="/javascripts/jquery.min.js"></script>
+<script type="text/javascript" src="/javascripts/jquery.cookie.min.js"></script>
+<script type="text/javascript" src="/javascripts/common.js"></script>
+<script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
+<script type="text/javascript" src="/javascripts/bootstrapValidator.min.js"></script>
+<script type="text/javascript" src="/javascripts/jquery.base64.js"></script>
 <script>
     $('form').bootstrapValidator({
         message: 'This value is not valid',
@@ -168,7 +169,8 @@
             },
         }
     });
-    var verifyCode='';
+    let verifyCode='';
+    let redirectUrl = '<%= data.originUrl%>';
     $(function() {
         if( !$.cookie('login_error')){
             $.cookie('login_error', '0');
@@ -253,8 +255,8 @@
             verifyCode =drawPic();
             $('#verifyCode').show();
         }
-        var name = $('#inputName').val();
-        var pwd = $('#inputPwd').val();
+        const name = $('#inputName').val();
+        const pwd = $('#inputPwd').val();
         console.log('用户名 '+ name +'密码 '+ pwd);
         if (pwd.length == 0 || name.length == 0) {
             alert("用户名和密码不能为空！");
@@ -274,7 +276,8 @@
                 alert(result.msg);
                 if(result.success){
                     saveAccount();
-                    window.location.href = hostUrl;
+                    // 如果需要重定向则重定向否则跳转主页
+                    window.location.href = redirectUrl || hostUrl;
                     console.log(result.data);
                 }else{
                     // 登陆失败清除密码刷新图片

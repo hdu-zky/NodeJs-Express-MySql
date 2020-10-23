@@ -1,4 +1,5 @@
-var sqlExecute = require('./sqlExecute')
+const sqlExecute = require('./sqlExecute');
+const async = require('async');
 
 /**
  * @api {get} /bookSort 处理请求返回分类页面
@@ -50,29 +51,44 @@ exports.rootHTML = function (req, res) {
  *        data:{}
  *     }
  * */
-exports.getSortBook = function (req, res, next) {
-    var bookTypeId = req.body.bookTypeId;
-    // 页面序号
-    var pageIndex = req.body.pageIndex;
-    // 每页数据量大小
-    var pageSize = req.body.pageSize;
-    var pageArray=[], i=0, j=0;
-    var query = "select bookId, bookName, authorName, bookTypeName from bookinfo" +
-        " where bookTypeId='"+bookTypeId+"'" ;
-    sqlExecute.mysqlConnect(query,{},function(err, result){
-        if (err) throw err;
-        //如果检索到数据
-        if(result.length > 0){
-            var pageCount= ( (result.length)%pageSize==0 ? (result.length)/pageSize
-                : (result.length-(result.length)%pageSize)/pageSize+1);
-            //返回cookie
-            for(i= parseInt(pageIndex-1) * parseInt(pageSize);
-                i<result.length && i<parseInt(pageIndex) * parseInt(pageSize); i++){
-                pageArray[j++] = result[i];
-            }
-            res.send({success: true, pageCount: pageCount, data: pageArray});
-        }else{
-            res.send({success: true,  pageCount: 0, data:{}});
+exports.getSortBook = function (req, res) {
+    let bookTypeId = req.body.bookTypeId;
+    let pageIndex = req.body.pageIndex;// 页面序号
+    let pageSize = req.body.pageSize;// 每页数据量大小
+    let queryCount = `select count(bookId) as bookCount from bookinfo where bookTypeId = ${bookTypeId}`;
+    let query = `select bookId, bookName, authorName, bookTypeName from bookinfo
+        where bookTypeId = ${bookTypeId} order by bookVisits desc limit ${(pageIndex - 1)*20}, 20`;
+    async.series([
+        function (callback) {
+            // 获取当前分类下的总数据大小
+            sqlExecute.mysqlConnect(queryCount,{},function(err, res){
+                if (err){
+                    console.log(err);
+                } else{
+                    callback(null, res[0]['bookCount']);
+                }
+            })
         }
+    ],function (err, bookCount) {
+        if (err){
+            console.log(err);
+        } else{
+            sqlExecute.mysqlConnect(query,{},function(err, result){
+                if (err){
+                    console.log(err);
+                } else{
+                    if(bookCount){
+                        //如果检索到数据则算出总页数
+                        let pageCount= ( bookCount%pageSize === 0 ? bookCount/pageSize
+                            : (bookCount - bookCount%pageSize)/pageSize+1);
+                        res.send({success: true, pageCount: pageCount, data: result});
+                    }else{
+                        res.send({success: true,  pageCount: 0, data:{}});
+                    }
+                }
+            });
+        }
+
     });
+
 };

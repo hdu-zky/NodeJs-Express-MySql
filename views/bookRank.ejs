@@ -4,7 +4,8 @@
     <meta charset="utf-8">
     <title>小说排行榜</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
     <link rel="stylesheet" href="/stylesheets/common.css">
 </head>
 <body>
@@ -23,9 +24,9 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-12 btn-group btn-group-justified rankType" role="group" aria-label="...">
-            <a class="btn btn-default col-sm-4 col-xs-4 active" href="javascript:void(0)" role="button" onclick="getTopList(1, 0)">总点击榜</a>
-            <a class="btn btn-default col-sm-4 col-xs-4" href="javascript:void(0)" role="button" onclick="getTopList(2, 0)">总收藏榜</a>
-            <a class="btn btn-default col-sm-4 col-xs-4" href="javascript:void(0)" role="button" onclick="getTopList(3, 0)">总下载榜</a>
+            <a class="btn btn-default col-sm-4 col-xs-4 topVisits active" href="javascript:void(0)" role="button" onclick="getTopList(1, 0)">总点击榜</a>
+            <a class="btn btn-default col-sm-4 col-xs-4 topCollect" href="javascript:void(0)" role="button" onclick="getTopList(2, 0)">总收藏榜</a>
+            <a class="btn btn-default col-sm-4 col-xs-4 topDownload" href="javascript:void(0)" role="button" onclick="getTopList(3, 0)">总下载榜</a>
         </div>
     </div>
 </div>
@@ -43,17 +44,11 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-12">
-            <!--<button  class="btn btn-primary selectBtn" id="firstPage">首页</button>-->
             <button  class="btn btn-primary selectBtn" id="prevPage" onclick="getPage(-1)">上一页</button>
             <select  class="selectIndex" id="selectIndex" onchange="getList()" style="color: #333333">
                 <option value="0">第1/20页</option>
             </select>
             <button  class="btn btn-primary selectBtn" id="nextPage" onclick="getPage(1)">下一页</button>
-            <!--<button  class="btn btn-primary selectBtn" id="lastPage">尾页</button>-->
-            <!--<label>-->
-                <!--(第<span id="pageIndex"></span>/<span id="pageCount"></span>页)-->
-                <!--当前<span id="pageSize"></span>条/页-->
-            <!--</label>-->
         </div>
         <div class=" col-sm-12" style="margin-top: 15px">
             <div class="input-group form-group">
@@ -67,15 +62,22 @@
 </div>
 <%- include component/footer.ejs %>
 <script>
-    var selectType = '<%= userInfo.typeId%>';
-    var pageIndex = 0;
-    var pageCount = '<%= userInfo.pageCount%>';
-    var httpUrl=[
+    let selectType = '<%= userInfo.typeId%>';
+    let pageIndex = 0;
+    let pageCount = '<%= userInfo.pageCount%>';
+    let httpUrl=[
         hostUrl + '/bookRank/getCount',
         hostUrl + '/bookRank/getTopList',
     ];
     getCount();
-    getTopList(1, 0);
+    $(function () {
+        switch (selectType) {
+            case '1': $('.topVisits').click();break;
+            case '2': $('.topCollect').click();break;
+            case '3': $('.topDownload').click();break;
+            default: $('.topVisits').click();break;
+        }
+    });
     $('.rankType a').click(function () {
         $(this).siblings('a').removeClass('active');
         $(this).addClass('active');
@@ -85,7 +87,7 @@
         $.post(httpUrl[0],
             function (result) {
                 if (result.success) {
-                    var html = '';
+                    let html = '';
                     html+= '<option value="0" selected="selected">第 1/'+ result.data +' 页</option>';
                     pageCount = result.data;
                     for (var i = 1; i < parseInt(result.data); i++) {
@@ -114,7 +116,7 @@
     }
     //获取分页列表
     function getList() {
-        var index = $('#selectIndex').children('option:selected').val();
+        let index = $('#selectIndex').children('option:selected').val();
         if(index == pageIndex){
             return;
         }
@@ -124,6 +126,7 @@
     function getTopList(type, index){
         selectType = type;
         pageIndex = index;
+        $(".selectIndex").val(index);
         $.post(httpUrl[1],{selectType: selectType, pageIndex: pageIndex},
             function (result) {
                 if (result.success) {

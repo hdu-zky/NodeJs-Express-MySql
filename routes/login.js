@@ -53,7 +53,8 @@ exports.Glogin = function (req, res) {
     // if (req.session.user&& req.url != '/login') {
     //     res.redirect(req.originalUrl);
     // } else {
-        res.render('login');
+        const URL =  req.query.redirect;
+        res.render('login', data={originUrl: URL});
     // }
 };
 exports.autoLogin = function (req, res) {

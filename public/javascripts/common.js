@@ -13,4 +13,3 @@ function searchBook() {
     $('#searchBook').prop('disabled', false);
     checkState(pIndex, pageCount);
 }
-

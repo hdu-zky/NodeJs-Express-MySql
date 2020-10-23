@@ -4,81 +4,38 @@
     <meta charset="utf-8">
     <title><%= bookTxt.chapterTitle %>_<%= bookTxt.bookName %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
     <link rel="stylesheet" href="/stylesheets/common.css">
 </head>
 <body class="txtBgColor">
 <div class="container">
     <h3 class="text-center title"><%= bookTxt.chapterTitle %></h3>
-    <div id="content"></div>
+    <div id="content"><%- bookTxt.bookContent %></div>
     <div class="row selectPage">
         <div class="col-sm-12 col-xs-12">
-            <button type="button" class="btn btn-primary prevPage" onclick="getPage(-1)">上一章</button>
-            <!--<button type="button" class="btn btn-primary backPage" onclick="getPage(-1)">回目录</button>-->
+            <!--如果是首章则设置url为返回目录页否则指向上一章-->
+            <a class="btn btn-primary prevPage" href="
+                <% if (bookTxt.prevChapterId === 0) { %>
+                    /bookInfo/<%= bookTxt.bookId%>
+                <%} else { %>
+                    /bookChapter/<%= bookTxt.bookId%>/<%= bookTxt.prevChapterId%>
+                <% } %> "
+            role="button">上一章</a>
+
             <a class="btn btn-primary backPage" href="/bookInfo/<%= bookTxt.bookId%>" role="button">回目录</a>
-            <button type="button" class="btn btn-primary nextPage" onclick="getPage(1)">下一章</button>
+
+            <!--如果是尾章则设置url为返回目录页否则指向下一章-->
+            <a class="btn btn-primary nextPage" href="
+                <% if (bookTxt.nextChapterId === 0) { %>
+                    /bookInfo/<%= bookTxt.bookId%>
+                <%} else { %>
+                    /bookChapter/<%= bookTxt.bookId%>/<%= bookTxt.nextChapterId%>
+                <% } %> "
+            role="button">下一章</a>
         </div>
     </div>
 </div>
 <%- include component/footer.ejs %>
-<script>
-    //获取最新章节号
-    var maxChapterNum = parseInt(localStorage.getItem('latestChapterId'));
-    //获取当前章节号
-    var bookId = '<%= bookTxt.bookId%>';
-    var chapterId = parseInt('<%= bookTxt.bookChapterId%>');
-    var success = '<%= bookTxt.success %>';
-    checkState();
-    chapterContent();
-    //获取该章节内容并以HTML格式展示
-    function chapterContent () {
-        if(success != '200'){
-            return;
-        }
-        $.post(hostUrl + '/bookChapter/getBookContent', {bookId: bookId, chapterId: chapterId},
-            function (result) {
-                if (result.success) {
-                    var tmp = result.bookContent;
-                    var html='';
-                    html += '<p>'+tmp;
-                    // 文本的换行替换成p标签
-                    // html = html.replace(new RegExp('\n','g'), '</p><p>');
-                    html += '</p>';
-                    // document.getElementById('content').innerHTML += '<p>&nbsp;&nbsp;&nbsp;&nbsp;';
-                    document.getElementById('content').innerHTML = html;
-                }
-            }
-        )
-    };
-    function getPage(delta){
-        chapterId += delta;
-        // var newId = parseInt(chapterId)+delta;
-        console.log(chapterId);
-        location.href = '/bookChapter/'+bookId+'/'+chapterId;
-    }
-    //更新按钮状态
-    function checkState() {
-        // 如果在首页且总共只有一页
-        if(chapterId == 1 && chapterId == maxChapterNum){
-            $('.prevPage').prop('disabled',true);
-            $('.nextPage').prop('disabled',true);
-        }
-        // 如果在首页且总共有多页
-        else if(chapterId == 1 && chapterId < maxChapterNum){
-            $('.prevPage').prop('disabled',true);
-            $('.nextPage').prop('disabled',false);
-        }
-        // 如果不在首页且不在尾页
-        else if(chapterId > 1 && chapterId < maxChapterNum){
-            $('.prevPage').prop('disabled',false);
-            $('.nextPage').prop('disabled',false);
-        }
-        // 如果在尾页
-        else if(chapterId > 1 && chapterId == maxChapterNum){
-            $('.prevPage').prop('disabled',false);
-            $('.nextPage').prop('disabled',true);
-        }
-    }
-</script>
 </body>
 </html>

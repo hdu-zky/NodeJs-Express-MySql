@@ -1,5 +1,6 @@
-var sqlExecute = require('./sqlExecute');
-var fs = require('fs');
+const sqlExecute = require('./sqlExecute');
+const fs = require('fs');
+const async = require('async')
 
 /**
  * @api {get} /bookChapter/:bookId/:textId 返回小说某章页面
@@ -15,32 +16,98 @@ var fs = require('fs');
  *     HTTP/1.1 500 server error
  * */
 exports.bookChapterHTML = function (req, res) {
-    var bookId = req.params.bookId;
-    var textId = req.params.textId;
-    var query = "select book.bookName, bookchapter.bookId, bookchapter.bookChapterId, bookchapter.chapterTitle from" +
+    const bookId = req.params.bookId;
+    const textId = req.params.textId;
+    const chapterContentUrl =  bookId+'\\'+textId+'.txt';
+    const filePath = 'F:\\nodejs\\express\\demo-1\\booktxt\\'+ chapterContentUrl;
+    if(bookId === "" || bookId ==null || isNaN(bookId) || textId === "" || textId ==null || isNaN(textId)){
+        res.status(404).render('error', error={
+            status: 404,
+            message: 'Not Found'
+        });
+        return false;
+    }
+    const query = "select book.bookName, bookchapter.bookId, bookchapter.bookChapterId, bookchapter.chapterTitle from" +
         " bookchapter inner join book" +
         " on bookchapter.bookId = book.bookId" +
         " where bookchapter.bookId  ='"+ bookId +"' && bookchapter.bookChapterId  ='"+ textId +"' ";
-    sqlExecute.mysqlConnect(query,{},function(err, result){
-        if (err){
-            console.log(err);
-        }else{
-            //如果检索到数据
-            if(result.length > 0){
-                res.render('bookChapter',
-                    bookTxt={ //第二个参数分配模板
-                        success: 200,
-                        bookId: result[0].bookId,
-                        bookName: result[0].bookName,
-                        bookChapterId: result[0].bookChapterId,
-                        chapterTitle: result[0].chapterTitle
+    // 查找上下一章节
+    const prevChapter = `select max(bookChapterId) as prevChapterId from bookchapter
+     where bookId  =${bookId} && bookChapterId < ${textId}`;
+    const nextChapter = `select min(bookChapterId) as nextChapterId from bookchapter
+     where bookId  =${bookId} && bookChapterId > ${textId}`;
+    async.series([
+        function (callback) {
+            sqlExecute.mysqlConnect(prevChapter,{},function(err, result){
+                if (err){console.log(err);}else{
+                    //如果检索到上一章节数据
+                    if(result.length > 0){
+                        callback(null, result[0].prevChapterId);
+                    }else {
+                        callback(null, 0);
                     }
-                );
-            }else{
-                res.render('bookChapter', bookTxt={success: 500});
-            }
+                }
+            })
+        },function (callback) {
+            sqlExecute.mysqlConnect(nextChapter,{},function(err, result){
+                if (err){console.log(err);}else{
+                    //如果检索到下一章节数据
+                    if(result.length > 0){
+                        callback(null, result[0].nextChapterId);
+                    }else {
+                        callback(null, 0);
+                    }
+                }
+            })
         }
-    });
+    ],function (err, results) {
+        if(err){console.log(err)}
+        //查找当前小说章节名及内容等
+        sqlExecute.mysqlConnect(query,{},function(err, result){
+            if (err){
+                console.log(err);
+            }else{
+                //如果检索到数据
+                if(result.length > 0){
+                    //从本地文件读取小说章节内容并返回到前端
+                    if(!fs.existsSync(filePath)){
+                        res.render('error', error={
+                            status: 404,
+                            message: 'load book txt failed, try to refresh'
+                        });
+                    }else{
+                        fs.readFile(filePath, 'utf8', function(err, data){
+                            if(err){
+                                console.log(err);
+                                res.render('error', error={
+                                    status: 404,
+                                    message: 'load book txt error, try to refresh'
+                                });
+                            }else {
+                                res.render('bookChapter',
+                                    bookTxt={
+                                        bookId: result[0].bookId,
+                                        bookName: result[0].bookName,
+                                        prevChapterId: results[0]|| 0,
+                                        bookChapterId: result[0].bookChapterId,
+                                        nextChapterId: results[1]|| 0,
+                                        chapterTitle: result[0].chapterTitle,
+                                        bookContent: data
+                                    }
+                                );
+                            }
+                        });
+                    }
+                }else{
+                    res.render('error', error={
+                        status: 404,
+                        message: 'Not Found'
+                    });
+                }
+            }
+        });
+    })
+
 };
 /**
  * @api {post} /bookChapter/getBookContent 从文件读取数据并返回
@@ -64,10 +131,10 @@ exports.bookChapterHTML = function (req, res) {
  *     }
  * */
 exports.getBookContent=function (req, res, next) {
-    var bookId = req.body.bookId;
-    var chapterId = req.body.chapterId;
-    var chapterContentUrl =  bookId+'\\'+chapterId+'.txt';
-    var filePath = 'F:\\nodejs\\express\\demo-1\\booktxt\\'+ chapterContentUrl;
+    const bookId = req.body.bookId;
+    const chapterId = req.body.chapterId;
+    const chapterContentUrl =  bookId+'\\'+chapterId+'.txt';
+    const filePath = 'F:\\nodejs\\express\\demo-1\\booktxt\\'+ chapterContentUrl;
     // console.log(filePath);
     //从本地文件读取小说章节内容并返回到前端
     if(!fs.existsSync(filePath)){
